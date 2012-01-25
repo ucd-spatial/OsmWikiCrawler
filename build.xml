@@ -1,0 +1,74 @@
+<project name="OsmWikiCrawler" basedir="." default="main">
+
+    <property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="bin"/>
+	<property name="user.longname"   value="Andrea Ballatore"/>
+	<property name="jar.filename"   value="osmwikicrawler"/>
+    <property name="classes.dir" value="${build.dir}"/>
+    <property name="jar.dir"     value="jar"/>
+    <property name="main-class"  value="org.ucd.osmwikicrawler.RunOsmWikiCrawler"/>
+	<property name="lib.dir"     value="lib"/>
+	<property name="version.num" value="0.1"/>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+	
+	<taskdef name="groovyc"
+		classname="org.codehaus.groovy.ant.Groovyc"
+		classpathref="classpath"/>
+	
+	<taskdef name="groovy" 
+	    classname="org.codehaus.groovy.ant.Groovy" 
+	    classpathref="classpath" />
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+	<!-- COMPILE -->
+    <target name="build">
+        <mkdir dir="${classes.dir}"/>
+        <groovyc srcdir="${src.dir}" destdir="${classes.dir}" failonerror="true"/>
+    	<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" failonerror="true"/>
+    </target>
+
+	<!-- BUILD JAR -->
+    <target name="jar" depends="clean,build">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${jar.filename}-${version.num}.jar" basedir="${classes.dir}" includes="**/*.class">
+        	<fileset dir="conf" />
+            <manifest>
+                <attribute name="Built-By" value="${user.longname}"/>
+                <attribute name="Main-Class" value="${main-class}"/>
+            	<attribute name="Implementation-Version" value="${version.num}"/>    
+            </manifest>
+        </jar>
+    </target>
+
+	<!-- RUN CRAWLER -->
+    <target name="run" depends="jar">
+    	<java fork="true" classname="org.ucd.osmwikicrawler.RunOsmWikiCrawler" 
+    		classpathref="classpath" failonerror="true">
+    	    <jvmarg value="-Xmx2048m"/>
+	        <classpath>
+	        	<path location="${jar.dir}/${jar.filename}-${version.num}.jar"/>
+	        </classpath>
+    	</java>
+    </target>
+	
+	<!-- UNIT TESTS -->
+	<target name="test" depends="jar">
+		<java fork="true" classname="org.ucd.osmwikicrawler.test.OsmWikiCrawlerTests" 
+			classpathref="classpath" failonerror="true">
+	        <classpath>
+	        	<path location="${jar.dir}/${jar.filename}-${version.num}.jar"/>
+	        </classpath>
+    	</java>
+	</target>
+	 
+    <target name="clean-build" depends="clean,jar"/>
+
+    <target name="main" depends="clean,run"/>
+
+</project>

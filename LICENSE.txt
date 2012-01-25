@@ -1,0 +1,17 @@
+=====================================================================
+	OSM Wiki Crawler License
+=====================================================================
+
+OSM Wiki Crawler, and all its integral parts, are released 
+under the GNU General Public License v3.
+Please note that this project uses data provided by OpenStreetMap
+(http://www.openstreetmap.org), but is not affiliated with the project.
+
+The GPL v3 is accessible here:
+http://www.gnu.org/licenses/gpl.html
+
+=====================================================================
+  Author: Andrea Ballatore (School of Computer Science and
+  	Informatics, University College Dublin)
+  Project home page: http://gforge.ucd.ie/projects/osm-similarity/
+=====================================================================

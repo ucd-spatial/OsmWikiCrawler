@@ -1,0 +1,14 @@
+Woodstox is dual-licensed under 2 alternative Open Source/Free licenses:
+LGPL 2.1 and Apache License 2.0. (starting with Woodstox 2.0 release).
+This is because of perceived incompatibility between these two popular
+licenses: while I do not agree in that there is a problem (the way I
+interpret LGPL, Java class loading is not static linking, ergo
+there is no virality), I nonetheless find it easier to just provide
+alternative downloads to risk alienating Apache/Jakarta or GPL users.
+
+What this means is that one can choose either one of these licenses
+(for purposes of re-distributing Woodstox; usually by including it as
+one of jars another application or library uses) by downloading corresponding
+jar file, using it, and living happily everafter. With source code
+distribution licensing does not matter; except that it is good to know
+that by default Ant will build 2 distributions, one under each license.
