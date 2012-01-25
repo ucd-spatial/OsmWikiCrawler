@@ -3,7 +3,8 @@
 =====================================================================
 
 The OpenStreetMap Wiki Crawler is an open source tool that extracts
-an RDF graph from the OpenStreetMap Wiki website ()
+an RDF graph from the OpenStreetMap Wiki website 
+(http://wiki.openstreetmap.org)
 
 ---------------------------------------------------------------------
 	How to get Java
@@ -25,15 +26,14 @@ http://www.java.com/en/download
 	How to get the Source
 ---------------------------------------------------------------------
 
-Use the svn command line to run:
-$ svn checkout svn://gforge.ucd.ie/var/lib/gforge/chroot/scmrepos/svn/osm-similarity/trunk
+The source code is available on GitHub: http://github.com/ucd-spatial
 
 ---------------------------------------------------------------------
 	How to compile the source code
 ---------------------------------------------------------------------
 
 The project was developed in the Eclipse IDE
-* http://www.eclipse.org/
+* http://www.eclipse.org
 With the Groovy plugin:
 * http://groovy.codehaus.org/Eclipse+Plugin
 
@@ -54,7 +54,7 @@ See LICENSE.txt.
 ---------------------------------------------------------------------
 Author: Andrea Ballatore (School of Computer Science and Informatics,
 	University College Dublin)
-Project home page: http://gforge.ucd.ie/projects/osm-similarity/
+Project home page: http://github.com/ucd-spatial
 
 ---------------------------------------------------------------------
 	External Libraries
