@@ -269,7 +269,7 @@ class Crawler {
 			if (rowData[field+"Uri"]) t.descriptionUris += ' ' + rowData[field+"Uri"]
 		}
 		t.description = t.description.trim()
-		// Note: back link to page from which the element has been extracted. This might affect the results.
+		// NB: back link to page from which the element has been extracted. This might affect the results.
 		//t.descriptionUris = (t.descriptionUris + ' ' + sourceUri).trim()
 		
 		// find types

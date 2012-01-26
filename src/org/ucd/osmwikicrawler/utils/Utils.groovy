@@ -159,11 +159,12 @@ class Utils {
 		if (!urisStr) return urisStr
 		assert urisStr
 		def fixedStrArr = []
+		urisStr = urisStr.trim()
 		def uris = urisStr.split(' ')*.trim()
 		if (uris.size()>1)
 			int i = 0 
 		uris.each{
-			assert it
+			assert it,"null element found in urisStr=$urisStr"
 			if (!validUriLength(it)){
 				log.warn("fixUrisString: detected very long or very short URI (max length=$Crawler.OSM_URI_MAX_LENGTH): skipping... $it")
 			}  
