@@ -156,12 +156,14 @@ class WikiRdf {
 		sub = sub.replace("=",'%3D').trim() //.decodeURL()
 		pred = pred.trim()
 		obj = obj.replace("=",'%3D').trim()
-		Utils.validateUrl(sub)
-		Utils.validateUrl(pred)
+		
 		if ( sub == obj ){
 			// loop, skip it
 			return
 		}
+		
+		assert Utils.validateUrl(sub, false ), "invalid RDF subject = $sub"
+		assert Utils.validateUrl(pred, false ), "invalid RDF subject = $pred"
 
 		Resource s = m.createResource( sub )
 		Property p = m.createProperty( pred )
