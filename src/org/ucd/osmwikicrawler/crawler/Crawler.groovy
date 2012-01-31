@@ -1164,7 +1164,7 @@ class Crawler {
 		assert visitedUris!=null
 		assert pseudoUris!=null
 		String htmlCode = getWikiUriContent( uri )
-		assert htmlCode
+		assert htmlCode,"getDataFromWikiTableIfPresent: empty html code for uri="+uri
 		
 		def tree = parseHtmlPage( htmlCode )
 		assert tree
