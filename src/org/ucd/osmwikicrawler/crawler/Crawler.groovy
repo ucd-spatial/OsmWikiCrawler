@@ -1164,6 +1164,11 @@ class Crawler {
 		assert visitedUris!=null
 		assert pseudoUris!=null
 		String htmlCode = getWikiUriContent( uri )
+		if (!htmlCode){
+			// experimental code
+			pseudoUris.add( uri )
+			return ontology
+		}
 		assert htmlCode,"getDataFromWikiTableIfPresent: empty html code for uri="+uri
 		
 		def tree = parseHtmlPage( htmlCode )
