@@ -1475,7 +1475,10 @@ class Crawler {
 			assert keyValue.size() == 2,"invalid key=tag data: '$tagging'"
 			term.key = keyValue[0].toLowerCase()
 			term.value = keyValue[1].toLowerCase()
-			assert term.key,"empty key from '$tagging' for ${term}"
+			if (!term.key){
+				term.sFailedToBuild += "empty key from '$tagging' for ${term}"
+				term.bFailedToBuild = true
+			}
 			assert term.value,"empty value from '$tagging' for ${term}"
 			if (term?.key?.length() > KEY_MAX_LENGTH){
 				term.sFailedToBuild += "key too long to be correct: from '$tagging' for ${term}. skipping page..."
