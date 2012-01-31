@@ -1354,10 +1354,6 @@ class Crawler {
 		//log.debug("crawlProposedTagPage: '$tag' <${uri}>")
 		String html = Utils.getWebPageByURI( uri, false )?.content
 		
-		
-		def tree = parseHtmlPage( html )
-		assert tree
-		
 		// new term
 		OsmOntoTerm term = new OsmOntoTerm()
 		term.foundInProposedPage = true
@@ -1370,6 +1366,8 @@ class Crawler {
 		}
 		
 		assert html,"html for '$uri' is null"
+		def tree = parseHtmlPage( html )
+		assert tree
 		// extract info from proposed feature page
 		Map data = extractTableFromProposedFeatPage( tree )
 
