@@ -1353,7 +1353,8 @@ class Crawler {
 		assert !(tag =~ "http:"),"invalid tag from uri $uri"
 		//log.debug("crawlProposedTagPage: '$tag' <${uri}>")
 		String html = Utils.getWebPageByURI( uri, false )?.content
-		assert html,"html for '$uri' is null"
+		
+		
 		def tree = parseHtmlPage( html )
 		assert tree
 		
@@ -1362,6 +1363,13 @@ class Crawler {
 		term.foundInProposedPage = true
 		term.uri = uri
 		
+		if (!html){
+			term.bFailedToBuild = true
+			term.sFailedToBuild += "Empty page"
+			return term
+		}
+		
+		assert html,"html for '$uri' is null"
 		// extract info from proposed feature page
 		Map data = extractTableFromProposedFeatPage( tree )
 
