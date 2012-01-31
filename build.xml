@@ -9,6 +9,8 @@
     <property name="main-class"  value="org.ucd.osmwikicrawler.RunOsmWikiCrawler"/>
 	<property name="lib.dir"     value="lib"/>
 	<property name="version.num" value="0.1"/>
+	<property name="lib.dir"     value="lib"/>
+	<property name="version.num" value="0.1"/>
 
     <path id="classpath">
         <fileset dir="${lib.dir}" includes="**/*.jar"/>

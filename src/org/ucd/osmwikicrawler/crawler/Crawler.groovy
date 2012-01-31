@@ -1519,7 +1519,11 @@ class Crawler {
 		assert term.value,"null value in $term"
 		assert term.key.length() < KEY_MAX_LENGTH,"invalid term key length $term"
 		assert term.wikiKeyUris,"term.wikiKeyUri is null in $term"
-		assert term.value.length() < 100,"invalid term value length $term"
+		if (term.value.length() > 100){
+			log.warn( "invalid term value length $term" )
+			term?.bFailedToBuild = true
+			return
+		}
 		assert !(term.uri =~ " " ),"invalid term value uri $term"
 		//TODO: make sure that term.wikiKeyUris multi key is valid. 
 		// assert !(term.wikiKeyUris =~ " " ),"invalid term key uri $term"
