@@ -40,6 +40,21 @@ class Crawler {
 	
 	static final String OSM_WIKI_BASE_URL = "http://wiki.openstreetmap.org/wiki/"
 	static final String OSM_MAP_FEATURES_PAGE = OSM_WIKI_BASE_URL + "Map_Features"
+	static final String OSM_WIKI_ALL_PAGES = "http://wiki.openstreetmap.org/w/index.php?title=Special:AllPages"
+	static final String OSM_WIKI_ALL_PAGES_REGEX = "http://wiki.openstreetmap.org/w/index.php\\?title=Special:AllPages"
+	static final def OSM_WIKI_ALL_PAGES_CLUSTERS = ["${OSM_WIKI_ALL_PAGES}&from=Karlovy_Vary&to=Key%3Afuel%3A1_50",
+		"${OSM_WIKI_ALL_PAGES}&from=Key%3Afuel%3AGTL_diesel&to=Key%3Arecycling_type",
+		"${OSM_WIKI_ALL_PAGES}&from=Key%3Aref&to=Kolkata",
+		"${OSM_WIKI_ALL_PAGES}&from=Princeton&to=Proposed_features%2FDirectional_Prefix_%26_Suffix_Indication",
+		"${OSM_WIKI_ALL_PAGES}&from=Proposed_features%2FDisabilityDescription&to=Proposed_features%2FRailway",
+		"${OSM_WIKI_ALL_PAGES}&from=Proposed_features%2FRailway_Signals&to=Proposed_features%2Femergency_phone",
+		"${OSM_WIKI_ALL_PAGES}&from=Proposed_features%2Femergency_vehicle_access&to=Pt-br%3AKey%3Aaddr%3Afloor",
+		"${OSM_WIKI_ALL_PAGES}&from=TMC%2FTMC_Import_Germany%2FRoads%2F53400_to_53500&to=Tag%3Aaeroway%3Dterminal",
+		"${OSM_WIKI_ALL_PAGES}&from=Tag%3Aaeroway%3Dwindsock&to=Tag%3Adock%3Dfloating",
+		"${OSM_WIKI_ALL_PAGES}&from=Tag%3Adock%3Dtidal&to=Tag%3Anatural%3Dgrassland",
+		"${OSM_WIKI_ALL_PAGES}&from=Tag%3Anatural%3Dheath&to=Tag%3Ashop%3Dvacuum_cleaner",
+		"${OSM_WIKI_ALL_PAGES}&from=Tag%3Ashop%3Dvariety_store&to=Talca%2C_Chile"
+		]
 	
 	static final String OSM_KEY_BASE_URL = OSM_WIKI_BASE_URL + "Key:"
 	static final String OSM_TAG_BASE_URL = OSM_WIKI_BASE_URL + "Tag:"
@@ -82,9 +97,18 @@ class Crawler {
 		OsmOntology ontology = new OsmOntology()
 		Set visitedUris = []
 		ontology = visitMapFeaturesPage( ontology, visitedUris )
+		// add CLUSTER pages
 		Set uris = getUrlsFromUrl( OSM_MAP_FEATURES_PAGE )
 		// add proposed tags page
 		uris.add( OSM_MAP_PROPOSED_FEATURES_PAGE )
+		// scan ALL PAGES
+		log.info(">>>> scanning cluster pages...")
+		OSM_WIKI_ALL_PAGES_CLUSTERS.each{ page->
+			Set allUris = getUrlsFromUrl( page )
+			uris.addAll( allUris )
+			log.info("> uris to scan="+uris.size())
+		}
+		log.info(">>>> cluster pages done.")
 		assert uris.size() > 0
 		ontology = consumeAllUris( uris, visitedUris, ontology )
 		//ontology = lgdService.matchOsmOntoTermsWithLgd( ontology, algo )
@@ -801,7 +825,8 @@ class Crawler {
 	 */
 	static boolean isOsmWikiUrl( String uri ){
 		if (!uri) return false
-		boolean valid = uri =~ OSM_WIKI_BASE_URL    
+		boolean valid = uri =~ OSM_WIKI_BASE_URL
+		if (!valid) valid = uri =~ OSM_WIKI_ALL_PAGES_REGEX 
 		return valid
 	}
 	
