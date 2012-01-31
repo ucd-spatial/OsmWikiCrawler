@@ -1530,7 +1530,12 @@ class Crawler {
 		}
 		
 		// validate URIs
-		Utils.validateUrl( term.uri )
+		boolean validUri = Utils.validateUrl( term.uri, false )
+		if (!validUri){
+			term?.bFailedToBuild = true
+			log.warn("Invalid uri=${term.uri}, skipping term")
+			return
+		}
 		term.wikiKeyUris.split(' ')*.trim().each{
 			if (it){
 				Utils.validateUrl( it )
