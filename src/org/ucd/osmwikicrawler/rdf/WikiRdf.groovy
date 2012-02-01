@@ -171,7 +171,10 @@ class WikiRdf {
 		if (obj =~ /^http:\/\//){
 			// url
 			if (!Crawler.isWikipediaLink(obj)){
-				Utils.validateUrl(obj)
+				if (!Utils.validateUrl(obj,false)){
+					log.warn "skipping invalid uri in statement object="+obj
+					return
+				}
 			}
 			o = m.createResource( obj ) //.decodeURL() )
 		} else {
