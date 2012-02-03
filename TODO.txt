@@ -1,0 +1,18 @@
+=====================================================================
+	OpenStreetMap Wiki Crawler
+=====================================================================
+    TODO list 
+---------------------------------------------------------------------
+
+* Define tags as SKOS concepts.
+* Include categories pages, e.g.
+  http://wiki.openstreetmap.org/wiki/Category:Education
+
+---------------------------------------------------------------------
+	Author and Contact
+---------------------------------------------------------------------
+Author: Andrea Ballatore (School of Computer Science and Informatics,
+	University College Dublin)
+Project home page: http://github.com/ucd-spatial
+
+---------------------------------------------------------------------
