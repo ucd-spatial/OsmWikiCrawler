@@ -4,7 +4,7 @@
     TODO list 
 ---------------------------------------------------------------------
 
-* Define tags as SKOS concepts.
+* Define tags as SKOS concepts: http://www.w3.org/2004/02/skos
 * Include categories pages, e.g.
   http://wiki.openstreetmap.org/wiki/Category:Education
 
