@@ -3,8 +3,11 @@
 =====================================================================
 
 The OpenStreetMap Wiki Crawler is an open source tool that extracts
-an RDF graph from the OpenStreetMap Wiki website 
-(http://wiki.openstreetmap.org)
+the OpenStreetMap Semantic Network from the OpenStreetMap Wiki website 
+(http://wiki.openstreetmap.org).
+Pre-extracted RDF graphs are available at
+http://github.com/ucd-spatial/OsmSemanticNetwork
+
 
 ---------------------------------------------------------------------
 	How to get Java
