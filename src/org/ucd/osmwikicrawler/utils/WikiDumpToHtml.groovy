@@ -50,6 +50,7 @@ public class WikiDumpToHtml {
          super();
     }
 	
+	static String _COMPLETED_FILE_NAME = "TASK_COMPLETED"
 	static String _HTML_HEADER = '''<!DOCTYPE html>
 		<html lang="en" dir="ltr">
 		<head>
@@ -175,12 +176,18 @@ public class WikiDumpToHtml {
 	 */
     public static void genHtmlFromXmlDump( String xmlFile, boolean skipFirstPass = false ) {
         // String bz2Filename = "c:\\temp\\dewikiversity-20100401-pages-articles.xml.bz2";
+		
+		
         String bz2Filename = xmlFile;
         WikiDB db = null;
-
+		final String flagFile = Utils.getOutputFolder() + File.separator + _COMPLETED_FILE_NAME
+		
         try {
+			//new File( flagFile ).delete()
+			
             String mainDirectory = Utils.getOutputFolder() + "/wiki_dump";
             String htmlDirectory = Utils.getPageCacheFolder();
+			
 
             // the following directory must exist for image references
             String imageDirectory = "dump/WikiDumpImages";
@@ -201,6 +208,7 @@ public class WikiDumpToHtml {
             wxp.parse();
             System.out.println(' ');
             System.out.println("Done!");
+			//new File( flagFile ).create()
         } catch (Exception e) {
                 e.printStackTrace();
         } finally {
