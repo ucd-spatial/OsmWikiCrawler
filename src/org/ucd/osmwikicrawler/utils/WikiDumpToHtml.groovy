@@ -232,6 +232,8 @@ public class WikiDumpToHtml {
 		assert title
 		title = title.replaceAll("'","%")
 		title = title.replaceAll("/","%2F")
+		title = title.replaceAll('\\(',"%28")
+		title = title.replaceAll('\\)',"%29")
 		String outTitle = URLEncoder.encode( Crawler.OSM_WIKI_BASE_URL ) + title
 		int _MAX_LENGTH = 255
 		if (outTitle.length() > _MAX_LENGTH ){
