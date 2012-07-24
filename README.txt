@@ -89,20 +89,27 @@ Project home page: http://github.com/ucd-spatial
 The OSM Wiki Crawler is dependent upon the following open source 
 libraries (see 'lib' folder for the licenses):
 
-groovy-all-1.7.8
-arq-2.8.8
-commons-lang-2.4
-commons-validator-1.4
-icu4j-3.4.4
-iri-0.8
-jakarta-oro-2.0.8
-jena-2.6.4
-junit-4.10
-log4j-1.2.14
-slf4j-api-1.5.8
-slf4j-log4j12-1.5.8
-tagsoup-1.2
-wstx-asl-3.2.9
-xercesImpl-2.7.1
-xom
+arq-2.8.8.jar
+bliki-core-3.0.18.jar
+bliki-pdf-3.0.18.jar
+commons-compress-1.0.jar
+commons-lang-2.4.jar
+commons-logging-1.1.1.jar
+commons-validator-1.4-SNAPSHOT.jar
+derby-10.9.1.jar
+derbyclient-10.9.1.jar
+groovy-all-1.7.8.jar
+icu4j-3.4.4.jar
+iri-0.8.jar
+jakarta-oro-2.0.8.jar
+jena-2.6.4.jar
+junit-4.10.jar
+log4j-1.2.14.jar
+slf4j-api-1.5.8.jar
+slf4j-log4j12-1.5.8.jar
+tagsoup-1.2.jar
+wstx-asl-3.2.9.jar
+xercesImpl-2.7.1.jar
+xom.jar
+
 ---------------------------------------------------------------------
