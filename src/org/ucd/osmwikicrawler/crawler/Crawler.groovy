@@ -127,7 +127,6 @@ class Crawler {
 				log.info("> uris to scan="+uris.size())
 				curIdx = uris.size()/_LOG_INTERVAL
 			}
-		
 		}
 		
 		//OSM_WIKI_ALL_PAGES_CLUSTERS.each{ page->

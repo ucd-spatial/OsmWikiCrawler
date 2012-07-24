@@ -169,6 +169,9 @@ class Utils {
 		File file = new File( fileName )
 		if (!file.exists()) return false
 		
+		// DEBUG logic
+		return false
+		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, CACHE_VALIDITY_DAYS * -1);
 		long purgeTime = cal.getTimeInMillis();

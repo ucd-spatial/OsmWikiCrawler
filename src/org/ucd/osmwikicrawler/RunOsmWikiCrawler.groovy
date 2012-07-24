@@ -71,12 +71,13 @@ class RunOsmWikiCrawler {
 		log.info "\n**** OsmWikiCrawler ****\n"
 		
 		// read parameters: TODO: insert in properties file or take from args
-		boolean findLgdMapping = false
+		boolean findLgdMapping = true
 		boolean generateHtmlFromDump = false
 		
 		// download and extract pages from XML dump
-		if (generateHtmlFromDump)
+		if (generateHtmlFromDump){
 			DumpUtils.setupWikiDump()
+		}
 		
 		// generate OSM Semantic network
 		log.info "\n**** Extract OSM Semantic Network ****\n"
