@@ -558,7 +558,7 @@ class Utils {
 	 */
 	static String downloadURL( String url, int maxRetrials ){
 		assert url
-		log.info("downloadURL: $url")
+		log.debug("downloadURL: $url")
 		assert maxRetrials > 0 && maxRetrials < 30
 		String msg = "downloadURL: url=${url},maxRetrials=${maxRetrials}"
 		int retrial = maxRetrials
@@ -637,14 +637,31 @@ class Utils {
 	static public WebPage getWebPageByURI( String uri, boolean failOnEmptyResponse = false ){
 		assert uri
 		
-		WebPage wp = null //WebPage.findByUri( uri )
+		WebPage wp = null
 		final int RETRIALS_N = 5
 		final int DOWNLOAD_RETRIAL_SLEEP_MS = 500
-
+		
+	
 		assert !wp
 		// get new page and save it
 		wp = new WebPage()
 		wp.uri = uri
+		
+		boolean checkCache = true
+		boolean foundInCache = false
+		if (checkCache){
+			// check for cached page
+			String fn = Utils.getDumpFileName( uri )
+			assert fn
+			if  (Utils.isCachedPageStillValid( fn )){
+				foundInCache = true
+				log.debug( "getWebPageByURI: file found in cache for URI=$uri" )
+				wp.content = Utils.readFile( fn )
+			}
+		}
+		if (foundInCache) return wp
+		
+		// not found, go ahead
 		try{
 			wp.content = downloadURL( uri, RETRIALS_N )
 			wp.downloadFailed = false

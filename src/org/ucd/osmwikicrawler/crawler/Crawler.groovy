@@ -106,9 +106,9 @@ class Crawler {
 		log.info(">>>> scanning pages...")
 		int curIdx = 0
 		new File(Utils.getPageCacheFolder()).eachFile{ f->
-			int _DEBUG_LIMIT = 4
+			int _DEBUG_LIMIT = 2
 			if (curIdx > _DEBUG_LIMIT){
-				return
+				//return
 			}
 			
 			// validate URI
@@ -118,10 +118,10 @@ class Crawler {
 			if (!Utils.validateUrl( uri,false )) return
 			
 			// process URI
-			Set allUris = getUrlsFromUrl( uri ).findAll{isOsmWikiUrl(it)}
+			Set allUris = getUrlsFromUrl( uri ).findAll{ isOsmWikiUrl(it) }
 			uris.addAll( allUris )
 			
-			int _LOG_INTERVAL = 5000
+			int _LOG_INTERVAL = 500
 			int i = uris.size()/_LOG_INTERVAL
 			if ( i > curIdx ){
 				log.info("> uris to scan="+uris.size())

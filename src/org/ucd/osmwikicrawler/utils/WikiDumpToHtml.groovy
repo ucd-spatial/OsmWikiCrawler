@@ -213,11 +213,11 @@ public class WikiDumpToHtml {
                 e.printStackTrace();
         } finally {
             if (db != null) {
-                    try {
-                            db.tearDown();
-                    } catch (Exception e) {
-                            e.printStackTrace();
-                    }
+                try {
+                    db.tearDown();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
