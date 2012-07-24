@@ -26,14 +26,17 @@
 	    classname="org.codehaus.groovy.ant.Groovy" 
 	    classpathref="classpath" />
 
+	<!-- Clean executable files -->
     <target name="clean">
         <delete dir="${build.dir}"/>
     </target>
 	
+	<!-- Clean all temporary files -->
 	<target name="clean-temp-files">
 		<delete dir="${output.dir}"/>
 	</target>
 	
+	<!-- Clean page cache -->
 	<target name="clean-page-cache">
 		<delete dir="${page.cache.dir}"/>
 	</target>

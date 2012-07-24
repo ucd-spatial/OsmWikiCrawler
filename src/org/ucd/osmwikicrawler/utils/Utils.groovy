@@ -662,9 +662,9 @@ class Utils {
 		if (foundInCache) return wp
 		
 		// not found, go ahead
-		// DEBUG LOGIC
 		if (!(uri =~ "raw")) {
-			assert false,"trying to download <$uri>, which should cached as\n $fn"
+			// DEBUG LOGIC
+			//assert false,"trying to download <$uri>, which should cached as\n $fn"
 		}
 		
 		try{
