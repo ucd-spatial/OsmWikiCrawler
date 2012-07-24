@@ -73,7 +73,7 @@ class RunOsmWikiCrawler {
 		// read parameters
 		boolean findLgdMapping = true
 		// download and extract pages from XML dump
-		//DumpUtils.setupWikiDump()
+		DumpUtils.setupWikiDump()
 		log.info "\n**** Extract OSM Semantic Network ****\n"
 		// generate OSM Semantic network
 		crawlOsmWiki( findLgdMapping )
