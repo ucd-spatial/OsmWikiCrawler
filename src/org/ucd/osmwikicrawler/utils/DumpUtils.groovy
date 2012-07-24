@@ -84,7 +84,8 @@ class DumpUtils {
 	 * 
 	 * Based on 
 	 * http://code.google.com/p/gwtwiki/source/browse/trunk/info.bliki.wiki/bliki-core/src/test/java/info/bliki/wiki/dump/DumpExample.java
-	 * @return
+	 * 
+	 * @return not used
 	 */
 	static public int setupWikiDump(){
 		String xmlFilePath = downloadFullXmlDump()
