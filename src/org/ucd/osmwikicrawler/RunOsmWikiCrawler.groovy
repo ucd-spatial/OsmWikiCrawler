@@ -72,7 +72,7 @@ class RunOsmWikiCrawler {
 		
 		// read parameters: TODO: insert in properties file or take from args
 		boolean findLgdMapping = true
-		boolean generateHtmlFromDump = false
+		boolean generateHtmlFromDump = true
 		
 		// download and extract pages from XML dump
 		if (generateHtmlFromDump){
