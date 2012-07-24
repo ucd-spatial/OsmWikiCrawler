@@ -25,6 +25,7 @@ import org.ucd.osmwikicrawler.crawler.Crawler
 import org.ucd.osmwikicrawler.ontology.Lgd
 import org.ucd.osmwikicrawler.ontology.OsmOntology
 import org.ucd.osmwikicrawler.rdf.*
+import org.ucd.osmwikicrawler.utils.DumpUtils;
 import org.ucd.osmwikicrawler.utils.Utils
 
 /**
@@ -71,8 +72,12 @@ class RunOsmWikiCrawler {
 		
 		// read parameters
 		boolean findLgdMapping = true
-		
+		// download and extract pages from XML dump
+		//DumpUtils.setupWikiDump()
+		log.info "\n**** Extract OSM Semantic Network ****\n"
+		// generate OSM Semantic network
 		crawlOsmWiki( findLgdMapping )
+		
 		log.info "\n**** OsmWikiCrawler has finished. Check output folders. ****\n"
 	}
 }

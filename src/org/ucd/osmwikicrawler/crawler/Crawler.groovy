@@ -42,6 +42,7 @@ class Crawler {
 	static final String OSM_MAP_FEATURES_PAGE = OSM_WIKI_BASE_URL + "Map_Features"
 	static final String OSM_WIKI_ALL_PAGES = "http://wiki.openstreetmap.org/w/index.php?title=Special:AllPages"
 	static final String OSM_WIKI_ALL_PAGES_REGEX = "http://wiki.openstreetmap.org/w/index.php\\?title=Special:AllPages"
+	/*
 	static final def OSM_WIKI_ALL_PAGES_CLUSTERS = ["${OSM_WIKI_ALL_PAGES}&from=Karlovy_Vary&to=Key%3Afuel%3A1_50",
 		"${OSM_WIKI_ALL_PAGES}&from=Key%3Afuel%3AGTL_diesel&to=Key%3Arecycling_type",
 		"${OSM_WIKI_ALL_PAGES}&from=Key%3Aref&to=Kolkata",
@@ -54,7 +55,7 @@ class Crawler {
 		"${OSM_WIKI_ALL_PAGES}&from=Tag%3Adock%3Dtidal&to=Tag%3Anatural%3Dgrassland",
 		"${OSM_WIKI_ALL_PAGES}&from=Tag%3Anatural%3Dheath&to=Tag%3Ashop%3Dvacuum_cleaner",
 		"${OSM_WIKI_ALL_PAGES}&from=Tag%3Ashop%3Dvariety_store&to=Talca%2C_Chile"
-		]
+		]*/
 	
 	static final String OSM_KEY_BASE_URL = OSM_WIKI_BASE_URL + "Key:"
 	static final String OSM_TAG_BASE_URL = OSM_WIKI_BASE_URL + "Tag:"
@@ -102,13 +103,39 @@ class Crawler {
 		// add proposed tags page
 		uris.add( OSM_MAP_PROPOSED_FEATURES_PAGE )
 		// scan ALL PAGES
-		log.info(">>>> scanning cluster pages...")
-		OSM_WIKI_ALL_PAGES_CLUSTERS.each{ page->
-			Set allUris = getUrlsFromUrl( page )
+		log.info(">>>> scanning pages...")
+		int curIdx = 0
+		new File(Utils.getPageCacheFolder()).eachFile{ f->
+			int _DEBUG_LIMIT = 4
+			if (curIdx > _DEBUG_LIMIT){
+				return
+			}
+			
+			// validate URI
+			String uri = Utils.getUriFromFileName( f.name )
+			if (!uri) return
+			if (!isOsmWikiUrl(uri)) return
+			if (!Utils.validateUrl( uri,false )) return
+			
+			// process URI
+			Set allUris = getUrlsFromUrl( uri ).findAll{isOsmWikiUrl(it)}
 			uris.addAll( allUris )
-			log.info("> uris to scan="+uris.size())
+			
+			int _LOG_INTERVAL = 5000
+			int i = uris.size()/_LOG_INTERVAL
+			if ( i > curIdx ){
+				log.info("> uris to scan="+uris.size())
+				curIdx = uris.size()/_LOG_INTERVAL
+			}
+		
 		}
-		log.info(">>>> cluster pages done.")
+		
+		//OSM_WIKI_ALL_PAGES_CLUSTERS.each{ page->
+		//	Set allUris = getUrlsFromUrl( page )
+		//	uris.addAll( allUris )
+		//	log.info("> uris to scan="+uris.size())
+		//}
+		log.info(">>>> ${uris.size()} valid pages found.")
 		assert uris.size() > 0
 		ontology = consumeAllUris( uris, visitedUris, ontology )
 		//ontology = lgdService.matchOsmOntoTermsWithLgd( ontology, algo )
@@ -224,6 +251,7 @@ class Crawler {
 		assert tree
 		
 		def urls = getUrlsFromXmlNode( tree )
+		//log.info("urls found: $urls.size()")
 		return urls
 	}
 	
@@ -1274,11 +1302,11 @@ class Crawler {
 	static private OsmOntology visitMapFeaturesPage( OsmOntology ontology, Set visitedUris ){
 		assert ontology
 		assert visitedUris != null
-		log.info("visitMapFeaturesPage $OSM_MAP_FEATURES_PAGE ...")
+		log.debug("visitMapFeaturesPage $OSM_MAP_FEATURES_PAGE ...")
 		Set pseudoUris = []
 		ontology = getDataFromWikiTableIfPresent( OSM_MAP_FEATURES_PAGE, ontology, visitedUris, pseudoUris )
 		if (pseudoUris.size() > 0 ){
-			log.info("visitMapFeaturesPage: Extracted pseudoUris=$pseudoUris")
+			log.debug("visitMapFeaturesPage: Extracted pseudoUris=$pseudoUris")
 		}
 		return ontology
 	}
@@ -1635,9 +1663,12 @@ class Crawler {
 	
 	/**
 	 * Dump all wiki website starting from startUri.
+	 * This process crawls the website page by page. 
+	 * @deprecated use setupWikiDump() instead
 	 * @return log string.
 	 */
 	static String wikiDump(){
+		assert false
 		Set toExpand = [ OSM_MAP_FEATURES_PAGE ]
 		Set expanded = []
 		

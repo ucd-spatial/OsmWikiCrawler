@@ -19,5 +19,9 @@
 	<classpathentry kind="lib" path="lib/jakarta-oro-2.0.8.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.10.jar"/>
 	<classpathentry kind="lib" path="lib/commons-validator-1.4-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/bliki-core-3.0.18.jar"/>
+	<classpathentry kind="lib" path="lib/bliki-pdf-3.0.18.jar"/>
+	<classpathentry kind="lib" path="lib/derbyclient-10.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

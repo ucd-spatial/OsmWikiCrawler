@@ -21,6 +21,7 @@ package org.ucd.osmwikicrawler.utils
 
 import java.io.IOException
 import java.math.*
+import java.util.zip.GZIPInputStream
 import org.apache.log4j.*
 import org.apache.commons.validator.routines.UrlValidator
 import org.ucd.osmwikicrawler.crawler.Crawler
@@ -74,15 +75,50 @@ class Utils {
 	}
 	
 	/**
+	*
+	* @return
+	*/
+   static String getTempFolder(){
+	   return "./$CRAWLER_OUTPUT_FOLDER/temp/"
+   }
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	static String getOutputFolder(){
+		return "./$CRAWLER_OUTPUT_FOLDER/"
+	}
+	
+	/**
 	 *
 	 * @param uri
 	 * @return
 	 */
-	static String getDumpFileName( String uri ){
+	static String getDumpFileName( String uri, String folder = null ){
 		assert uri
-		String fn = getPageCacheFolder() + URLEncoder.encode(uri)
+		if (!folder) folder = getPageCacheFolder()
+		String fn = folder + URLEncoder.encode(uri)
 		fn = fn.replaceAll('\\*',Crawler.ASTERISK_URL_ENC)
 		return fn
+	}
+	
+	/**
+	 * 
+	 * @param filePath
+	 * @return
+	 */
+	public static String getUriFromFileName( String filePath ){
+		try {
+			String uri = URLDecoder.decode(filePath)
+			//log.info("getUriFromFileName: "+uri)
+			//Utils.validateUrl(uri)
+			return uri
+		} catch( java.lang.IllegalArgumentException e ){
+			//log.warn("Illegal URI, skipping: $filePath")
+			return null
+		}
 	}
 	
 	/**
@@ -126,7 +162,7 @@ class Utils {
 	/**
 	 * 
 	 * @param fileName
-	 * @return
+	 * @return true if page is not older than one day
 	 */
 	static boolean isCachedPageStillValid( String fileName ){
 		assert fileName
@@ -148,6 +184,57 @@ class Utils {
 	static boolean validUriLength( String uri ){
 		assert uri != null
 		return uri.length() <= Crawler.OSM_URI_MAX_LENGTH && uri.length() >= Crawler.OSM_URI_MIN_LENGTH
+	}
+	
+	/**
+	 * 
+	 * @param gzipped
+	 * @return
+	 * @throws IOException
+	 */
+	public static String decompressGzipText( String gzipped ) throws IOException {
+		//public static String decompress(byte[] compressed) throws IOException {
+		final int BUFFER_SIZE = 32;
+		// convert string to bytes
+		byte[] bytes = gzipped.getBytes()
+		ByteArrayInputStream is = new ByteArrayInputStream(bytes);
+		GZIPInputStream gis = new GZIPInputStream(is, BUFFER_SIZE);
+		StringBuilder string = new StringBuilder();
+		byte[] data = new byte[BUFFER_SIZE];
+		int bytesRead;
+		while ((bytesRead = gis.read(data)) != -1) {
+			string.append(new String(data, 0, bytesRead));
+		}
+		gis.close();
+		is.close();
+		return string.toString();
+	
+	}
+	
+	/**
+	 * 
+	 * @param gzFilePath
+	 * @param outFile
+	 * @return
+	 * @throws IOException
+	 */
+	public static boolean gunzipFile( String gzFilePath, String outFile ) throws IOException {
+		
+		String source = gzFilePath;
+		String outFilename = outFile;
+			
+		FileInputStream instream= new FileInputStream(source);
+		GZIPInputStream ginstream = new GZIPInputStream(instream);
+		FileOutputStream outstream = new FileOutputStream(outFilename);
+		byte[] buf = new byte[1024];
+		int len;
+		while ((len = ginstream.read(buf)) > 0){
+			outstream.write(buf, 0, len);
+		}
+
+		ginstream.close();
+		outstream.close();
+		return true
 	}
 	
 	/**
@@ -447,12 +534,14 @@ class Utils {
 	}
 
 	/**
+	 * Download URL and return file content.
 	 * 
 	 * @param url
 	 * @return
 	 */
 	static String downloadURL( String url, int maxRetrials ){
 		assert url
+		log.info("downloadURL: $url")
 		assert maxRetrials > 0 && maxRetrials < 30
 		String msg = "downloadURL: url=${url},maxRetrials=${maxRetrials}"
 		int retrial = maxRetrials
@@ -543,7 +632,7 @@ class Utils {
 			wp.content = downloadURL( uri, RETRIALS_N )
 			wp.downloadFailed = false
 		} catch(e){
-			log.warn("getWebPageByURI: "+e)
+			log.warn("getWebPageByURI: "+uri+": \t"+e)
 			wp.downloadFailed = true
 		}
 		
