@@ -74,6 +74,8 @@ class RunOsmWikiCrawler {
 		boolean findLgdMapping = true
 		boolean generateHtmlFromDump = true
 		
+		log.info "*** Crawler settings: mapToLGD=$findLgdMapping useXmlDump=$generateHtmlFromDump"
+		
 		// download and extract pages from XML dump
 		if (generateHtmlFromDump){
 			DumpUtils.setupWikiDump()
