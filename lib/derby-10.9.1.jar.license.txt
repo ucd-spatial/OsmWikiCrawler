@@ -1,0 +1,1 @@
+See http://db.apache.org/derby/license.html
