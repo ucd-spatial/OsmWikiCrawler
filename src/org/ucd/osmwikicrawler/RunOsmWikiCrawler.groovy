@@ -70,9 +70,10 @@ class RunOsmWikiCrawler {
 		PropertyConfigurator.configure( "conf/log4j.properties" );
 		log.info "\n**** OsmWikiCrawler ****\n"
 		
-		// read parameters: TODO: insert in properties file or take from args
-		boolean findLgdMapping = true
-		boolean generateHtmlFromDump = true
+		// read parameters: 
+		// TODO: insert in properties file or take from args
+		boolean findLgdMapping = false
+		boolean generateHtmlFromDump = false
 		
 		log.info "*** Crawler settings: mapToLGD=$findLgdMapping useXmlDump=$generateHtmlFromDump"
 		

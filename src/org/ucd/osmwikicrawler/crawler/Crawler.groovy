@@ -105,6 +105,16 @@ class Crawler {
 		// scan ALL PAGES
 		log.info(">>>> scanning pages...")
 		int curIdx = 0
+		
+		def filterLink = { uri->
+			if (!isOsmWikiUrl(uri)) return false
+			if (uri[-4..-1] in [".png",".jpg"]) return false
+			if (uri =~ "/w/index.php?") return false
+			if (uri =~ "/wiki/User:") return false
+			if (uri =~ "/wiki/w/") return false
+			return true
+		}
+		
 		new File(Utils.getPageCacheFolder()).eachFile{ f->
 			int _DEBUG_LIMIT = 2
 			if (curIdx > _DEBUG_LIMIT){
@@ -118,9 +128,10 @@ class Crawler {
 			if (!Utils.validateUrl( uri,false )) return
 			
 			// process URI
-			Set allUris = getUrlsFromUrl( uri ).findAll{ isOsmWikiUrl(it) }
+			Set allUris = getUrlsFromUrl( uri ).findAll{ filterLink(it) }
+			//log.info( allUris.join("\n") )
 			uris.addAll( allUris )
-			
+			//log.info(uris)
 			int _LOG_INTERVAL = 500
 			int i = uris.size()/_LOG_INTERVAL
 			if ( i > curIdx ){
