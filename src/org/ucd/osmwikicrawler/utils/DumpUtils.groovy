@@ -64,7 +64,9 @@ class DumpUtils {
 		if (!Utils.isCachedPageStillValid(fnGz)){
 			// download DUMP.xml.gz
 			log.info("   Downloading dump file $uriGz (this may take several minutes)...")
-			Utils.outputFile( Utils.getWebPageByURI( uriGz, true )?.content, fnGz )  
+			boolean ok = Utils.downloadURLBinary( uriGz, fnGz )
+			assert ok
+			//Utils.outputFile( Utils.getWebPageByURI( uriGz, true )?.content, fnGz )  
 			log.info("   Dump file downloaded.")
 		}
 		if (!Utils.isCachedPageStillValid(fn)){

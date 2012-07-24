@@ -29,7 +29,7 @@
         <delete dir="${build.dir}"/>
     </target>
 	
-	<target name="clean-output">
+	<target name="clean-temp-files">
 		<delete dir="${output.dir}"/>
 	</target>
 

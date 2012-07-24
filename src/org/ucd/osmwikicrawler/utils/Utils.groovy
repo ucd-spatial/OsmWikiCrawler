@@ -532,6 +532,23 @@ class Utils {
 			throw new RuntimeException("***** Too little memory (${freed}M) to keep on working *****")
 		}
 	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @param maxRetrials
+	 * @return
+	 */
+	static boolean downloadURLBinary( String url, String targetFile, int maxRetrials = 10){
+		assert url
+		assert targetFile
+		assert maxRetrials >= 0
+		def file = new FileOutputStream( targetFile )
+		def out = new BufferedOutputStream( file )
+		out << new URL(url).openStream()
+		out.close()
+		return true
+	}
 
 	/**
 	 * Download URL and return file content.
