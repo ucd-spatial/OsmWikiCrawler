@@ -208,7 +208,6 @@ public class WikiDumpToHtml {
             wxp.parse();
             System.out.println(' ');
             System.out.println("Done!");
-			//new File( flagFile ).create()
         } catch (Exception e) {
                 e.printStackTrace();
         } finally {

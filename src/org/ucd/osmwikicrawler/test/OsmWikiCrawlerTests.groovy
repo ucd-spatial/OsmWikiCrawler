@@ -89,7 +89,8 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 		   "http://wiki.openstreetmap.org/wiki/Tag:ref:<qualifier>%3Doperator's_or_network's_reference",
 		   "http://wiki.openstreetmap.org/wiki/Tag:waterway%3D[river,_stream,_canal,_drain,_ditch]",
 		   "http://wiki.openstreetmap.org/wiki/Tag:name%3D<vehicle_type>_<reference_number>:_<initial_stop>_=>_<terminal_stop>",
-		   "http://wiki.openstreetmap.org/wiki/Tag:region_type%3Dregion_category_value,_possible_values_for_region_type,administrativestate/county/township/city/village/province/prefecture,_legal2judicial_county/judicial_districtcadastral_(see_2)katastralgemeinde/grundstücktelephone3county_code_zone/area_code_zone/district_code_zone/postalzone_a_(first_digit)/_zone_b_(2nd_and_third_digit)*/_etc.political_(electoral)4riding/constituency/district/county/countrymaritime_(maritime_boundaries)5ocean/seemountain_rangemountain_range/massive/mountaindiscussvalleydiscussreligious6parish/deanery/diocese_/province/ecclesiastical_province_climatic_see_for_example_turkish_regions_wikipedia:regions_of_turkey" ]
+		   "http://wiki.openstreetmap.org/wiki/Tag:region_type%3Dregion_category_value,_possible_values_for_region_type,administrativestate/county/township/city/village/province/prefecture,_legal2judicial_county/judicial_districtcadastral_(see_2)katastralgemeinde/grundstücktelephone3county_code_zone/area_code_zone/district_code_zone/postalzone_a_(first_digit)/_zone_b_(2nd_and_third_digit)*/_etc.political_(electoral)4riding/constituency/district/county/countrymaritime_(maritime_boundaries)5ocean/seemountain_rangemountain_range/massive/mountaindiscussvalleydiscussreligious6parish/deanery/diocese_/province/ecclesiastical_province_climatic_see_for_example_turkish_regions_wikipedia:regions_of_turkey",
+		   "http://wiki.openstreetmap.org/wiki/Tag:name_(or_ref)%3D(..)" ]
 		invalidUris.each{
 			String fixed = Utils.fixUri(it)
 			assertTrue( Utils.validateUrl(fixed) )

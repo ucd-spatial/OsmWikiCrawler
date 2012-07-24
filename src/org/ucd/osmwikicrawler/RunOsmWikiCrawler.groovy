@@ -70,12 +70,16 @@ class RunOsmWikiCrawler {
 		PropertyConfigurator.configure( "conf/log4j.properties" );
 		log.info "\n**** OsmWikiCrawler ****\n"
 		
-		// read parameters
-		boolean findLgdMapping = true
+		// read parameters: TODO: insert in properties file or take from args
+		boolean findLgdMapping = false
+		boolean generateHtmlFromDump = false
+		
 		// download and extract pages from XML dump
-		DumpUtils.setupWikiDump()
-		log.info "\n**** Extract OSM Semantic Network ****\n"
+		if (generateHtmlFromDump)
+			DumpUtils.setupWikiDump()
+		
 		// generate OSM Semantic network
+		log.info "\n**** Extract OSM Semantic Network ****\n"
 		crawlOsmWiki( findLgdMapping )
 		
 		log.info "\n**** OsmWikiCrawler has finished. Check output folders. ****\n"
