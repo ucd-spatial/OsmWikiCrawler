@@ -72,7 +72,7 @@ class RunOsmWikiCrawler {
 		
 		// read parameters: 
 		// TODO: insert in properties file or take from args
-		boolean findLgdMapping = false
+		boolean findLgdMapping = true
 		boolean generateHtmlFromDump = true
 		
 		log.info "*** Crawler settings: mapToLGD=$findLgdMapping useXmlDump=$generateHtmlFromDump"
