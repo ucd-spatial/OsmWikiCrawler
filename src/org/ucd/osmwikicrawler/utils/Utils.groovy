@@ -294,8 +294,8 @@ class Utils {
 		fixedUri = fixedUri.replaceAll( "_,", "," )
 		fixedUri = fixedUri.replaceAll( "=%3D", "%3D" )
 		fixedUri = fixedUri.replaceAll( "_=_", "%3D" )
-		
 		fixedUri = fixedUri.replaceAll( "\\.\\.\\.", "" )
+		fixedUri = fixedUri.replaceAll( "\\.\\.", "." )
 		fixedUri = fixedUri.replaceAll( "\"", "" )
 		fixedUri = fixedUri.replaceAll( "\\|", "_" )
 		fixedUri = fixedUri.replaceAll( "\\+", "%2B" )
