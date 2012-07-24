@@ -2,6 +2,7 @@
 
     <property name="src.dir"     value="src"/>
     <property name="build.dir"   value="bin"/>
+	<property name="output.dir"   value="osm_wiki_crawler_output"/>
 	<property name="user.longname"   value="Andrea Ballatore"/>
 	<property name="jar.filename"   value="osmwikicrawler"/>
     <property name="classes.dir" value="${build.dir}"/>
@@ -27,6 +28,10 @@
     <target name="clean">
         <delete dir="${build.dir}"/>
     </target>
+	
+	<target name="clean-output">
+		<delete dir="${output.dir}"/>
+	</target>
 
 	<!-- COMPILE -->
     <target name="build">
