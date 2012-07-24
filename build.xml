@@ -3,6 +3,7 @@
     <property name="src.dir"     value="src"/>
     <property name="build.dir"   value="bin"/>
 	<property name="output.dir"   value="osm_wiki_crawler_output"/>
+	<property name="page.cache.dir"   value="osm_wiki_crawler_output/temp/page_cache"/>
 	<property name="user.longname"   value="Andrea Ballatore"/>
 	<property name="jar.filename"   value="osmwikicrawler"/>
     <property name="classes.dir" value="${build.dir}"/>
@@ -31,6 +32,10 @@
 	
 	<target name="clean-temp-files">
 		<delete dir="${output.dir}"/>
+	</target>
+	
+	<target name="clean-page-cache">
+		<delete dir="${page.cache.dir}"/>
 	</target>
 
 	<!-- COMPILE -->

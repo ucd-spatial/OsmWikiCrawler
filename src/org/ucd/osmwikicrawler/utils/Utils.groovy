@@ -646,12 +646,12 @@ class Utils {
 		// get new page and save it
 		wp = new WebPage()
 		wp.uri = uri
+		String fn = Utils.getDumpFileName( uri )
 		
 		boolean checkCache = true
 		boolean foundInCache = false
 		if (checkCache){
 			// check for cached page
-			String fn = Utils.getDumpFileName( uri )
 			assert fn
 			if  (Utils.isCachedPageStillValid( fn )){
 				foundInCache = true
@@ -662,6 +662,11 @@ class Utils {
 		if (foundInCache) return wp
 		
 		// not found, go ahead
+		// DEBUG LOGIC
+		if (!(uri =~ "raw")) {
+			assert false,"trying to download <$uri>, which should cached as\n $fn"
+		}
+		
 		try{
 			wp.content = downloadURL( uri, RETRIALS_N )
 			wp.downloadFailed = false
