@@ -128,9 +128,12 @@ class Crawler {
 			if (!Utils.validateUrl( uri,false )) return
 			
 			// process URI
-			Set allUris = getUrlsFromUrl( uri ).findAll{ filterLink(it) }
+			//Set allUris = getUrlsFromUrl( uri ).findAll{ filterLink(it) }
 			//log.info( allUris.join("\n") )
-			uris.addAll( allUris )
+			//uris.addAll( allUris )
+			
+			uris.add(uri)
+			
 			//log.info(uris)
 			int _LOG_INTERVAL = 500
 			int i = uris.size()/_LOG_INTERVAL
