@@ -10,6 +10,14 @@ http://github.com/ucd-spatial/OsmSemanticNetwork
 
 
 ---------------------------------------------------------------------
+	Author and Contact
+---------------------------------------------------------------------
+Author: Andrea Ballatore (University College Dublin)
+		http://sites.google.com/site/andreaballatore
+Contact: myname.mysurname@ucd.ie
+Project home page: http://github.com/ucd-spatial
+
+---------------------------------------------------------------------
 	How to get Java
 ---------------------------------------------------------------------
 To run the OpenStreetMap Wiki Crawler, Java 1.6+ has to be installed. 
@@ -75,13 +83,6 @@ If you use this work in your research, please reference this paper:
 ---------------------------------------------------------------------
 
 See LICENSE.txt.
-
----------------------------------------------------------------------
-	Author and Contact
----------------------------------------------------------------------
-Author: Andrea Ballatore (School of Computer Science and Informatics,
-	University College Dublin)
-Project home page: http://github.com/ucd-spatial
 
 ---------------------------------------------------------------------
 	External Libraries
