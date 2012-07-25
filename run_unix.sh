@@ -19,4 +19,4 @@
 #   Author: Andrea Ballatore
 #   Project home page: http://gforge.ucd.ie/projects/osm-similarity/
 
-java -cp "jar/osmwikicrawler-0.1.jar:lib/arq-2.8.8.jar:lib/jakarta-oro-2.0.8.jar:lib/commons-validator-1.4-SNAPSHOT.jar:lib/jena-2.6.4.jar:lib/log4j-1.2.14.jar:lib/slf4j-api-1.5.8.jar:lib/commons-lang-2.4.jar:lib/slf4j-log4j12-1.5.8.jar:lib/junit-4.10.jar:lib/tagsoup-1.2.jar:lib/wstx-asl-3.2.9.jar:lib/iri-0.8.jar:lib/xercesImpl-2.7.1.jar:lib/xom.jar:lib/icu4j-3.4.4.jar:lib/groovy-all-1.7.8.jar"  org.ucd.osmwikicrawler.RunOsmWikiCrawler
+java -cp "jar/osmwikicrawler-0.1.jar:lib/arq-2.8.8.jar:lib/bliki-core-3.0.18.jar:lib/bliki-pdf-3.0.18.jar:lib/commons-compress-1.0.jar:lib/commons-lang-2.4.jar:lib/commons-logging-1.1.1.jar:lib/commons-validator-1.4-SNAPSHOT.jar:lib/derby-10.9.1.jar:lib/derbyclient-10.9.1.jar:lib/groovy-all-1.7.8.jar:lib/icu4j-3.4.4.jar:lib/iri-0.8.jar:lib/jakarta-oro-2.0.8.jar:lib/jena-2.6.4.jar:lib/junit-4.10.jar:lib/log4j-1.2.14.jar:lib/slf4j-api-1.5.8.jar:lib/slf4j-log4j12-1.5.8.jar:lib/tagsoup-1.2.jar:lib/wstx-asl-3.2.9.jar:lib/xercesImpl-2.7.1.jar:lib/xom.jar:lib/groovy-all-1.7.8.jar"  org.ucd.osmwikicrawler.RunOsmWikiCrawler
