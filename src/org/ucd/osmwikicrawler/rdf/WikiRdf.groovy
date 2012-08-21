@@ -212,11 +212,14 @@ class WikiRdf {
 	 */
 	static private Model createSkosScheme( Model m ){
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT_SCHEME, m )
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/title", "Conceptualisation of geographic terms extracted from the OpenStreetMap Wiki website, and used in the OpenStreetMap vector map.", m )
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/creator", "http://github.com/ucd-spatial/OsmWikiCrawler", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/title", "OSM Semantic Network.", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/language", "International English", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/description", "Conceptualisation of geographic terms extracted from the OpenStreetMap Wiki website, and used in the OpenStreetMap vector map.", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/creator", "http://sites.google.com/site/andreaballatore", m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/publisher", "http://sites.google.com/site/andreaballatore", m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/source", "http://wiki.openstreetmap.org", m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/rights", "This material is Open Knowledge. http://opendefinition.org", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/date", new Date().toString(), m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_DEFINITION, "Dummy root concept. It does not carry any meaning.", m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT, m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_INSCHEME, OntoUtils.SKOS_SCHEMA_NAME, m )
