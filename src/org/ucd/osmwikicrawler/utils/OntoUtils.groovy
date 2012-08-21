@@ -66,6 +66,7 @@ class OntoUtils {
 		rdfsc:"http://www.w3.org/2000/01/rdf-schema#",
 		dct:"http://purl.org/dc/terms/",
 		sosm: SEMOSM_ROOT_URL,
+		sosmv: SEMOSM_ROOT_URL + "wiki/OSMSemanticNetwork#",
 		sosmt: SEMOSM_ROOT_URL+"terms/",
 		sosmf: SEMOSM_ROOT_URL+"osm_feat/",
 		sosmk: SEMOSM_ROOT_URL+"keyword/",
@@ -81,18 +82,18 @@ class OntoUtils {
 	
 	/** Semantic OSM ontological predicates */
 	static final String MANUALLY_MAPPED = NAMESPACES['sosmt'] + "manualMapping"
-	static final String SOSM_WIKIPEDIA_LINK = NAMESPACES['sosmt'] + "wikipediaLink"
-	static final String SOSM_INTERNAL_LINK = NAMESPACES['sosmt'] + "link"
-	static final String SOSM_KEY = NAMESPACES['sosmt'] + "key"
-	static final String SOSM_KEY_LABEL = NAMESPACES['sosmt'] + "keyLabel"
-	static final String SOSM_VALUE = NAMESPACES['sosmt'] + "value"
-	static final String SOSM_VALUE_LABEL = NAMESPACES['sosmt'] + "valueLabel"
+	static final String SOSM_WIKIPEDIA_LINK = NAMESPACES['sosmv'] + "wikipediaLink"
+	static final String SOSM_INTERNAL_LINK = NAMESPACES['sosmv'] + "link"
+	static final String SOSM_KEY = NAMESPACES['sosmv'] + "key"
+	static final String SOSM_KEY_LABEL = NAMESPACES['sosmv'] + "keyLabel"
+	static final String SOSM_VALUE = NAMESPACES['sosmv'] + "value"
+	static final String SOSM_VALUE_LABEL = NAMESPACES['sosmv'] + "valueLabel"
 	
-	static final String SOSM_REDIRECT = NAMESPACES['sosmt'] + "redirect"
-	static final String SOSM_IMPLIES = NAMESPACES['sosmt'] + "implies"
-	static final String SOSM_APPLIES_TO = NAMESPACES['sosmt'] + "appliesTo"
-	static final String SOSM_COMBINATION = NAMESPACES['sosmt'] + "combinedWith"
-	static final String LGD_MAPPED = NAMESPACES['sosmt'] + "lgdMapping"
+	static final String SOSM_REDIRECT = NAMESPACES['sosmv'] + "redirect"
+	static final String SOSM_IMPLIES = NAMESPACES['sosmv'] + "implies"
+	static final String SOSM_APPLIES_TO = NAMESPACES['sosmv'] + "appliesTo"
+	static final String SOSM_COMBINATION = NAMESPACES['sosmv'] + "combinedWith"
+	static final String LGD_MAPPED = NAMESPACES['sosmv'] + "lgdMapping"
 	static final String SEMOSM_SCORE_URI = NAMESPACES['sosm'] + "score#"
 	static final String GRAPH_ROOT_NODE = NAMESPACES['sosm'] + "ROOT"
 	static final String SEMOSM_HAS_KEYWORD = NAMESPACES['sosmt'] + "hasKeyword"
@@ -117,10 +118,10 @@ class OntoUtils {
 	static final String DBP_ONTO_DISAMBIGUATE = NAMESPACES['dbpo']+"wikiPageDisambiguates"
 	
 	/** SKOS vocabulary */
-	static final String SKOS_SCHEMA_NAME = "http://wiki.openstreetmap.org/terms/OpenStreetMapScheme" // + "Concepts"
+	static final String SKOS_SCHEMA_NAME = "http://wiki.openstreetmap.org/wiki/OSMSemanticNetwork" // + "Concepts"
 	static final String SKOS_BROADER = NAMESPACES['skos'] + "broader"
 	static final String SKOS_CONCEPT_SCHEME = NAMESPACES['skos'] + "ConceptScheme"
-	static final String SKOS_TOP_CONCEPT = NAMESPACES['sosmt'] + "RootConcept"
+	static final String SKOS_TOP_CONCEPT = NAMESPACES['sosmv'] + "rootConcept"
 	static final String SKOS_EXACT_MATCH = NAMESPACES['skos'] + "exactMatch"
 	static final String SKOS_REL_MATCH = NAMESPACES['skos'] + "relatedMatch"
 	static final String SKOS_INSCHEME = NAMESPACES['skos'] + "inScheme"
