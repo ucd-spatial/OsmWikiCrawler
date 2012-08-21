@@ -955,6 +955,7 @@ class Crawler {
    public static String truncateUriFromActionRaw( String uri ){
 	   //if (uri =~ RAW_DATA_OPTION){
 	   String fixedUri = uri.replaceAll(/\?&action=raw$/,"")
+	   fixedUri = fixedUri.replaceAll(/:\*$/,"")
 	   assert fixedUri
 	   return fixedUri
 	   //}

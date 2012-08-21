@@ -67,10 +67,13 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 	
 	void testTruncateUriFromActionRaw(){
 		println "testTruncateUriFromActionRaw"
-		String uri = "http://wiki.openstreetmap.org/wiki/Key:abandoned?&action=raw"
-		println uri
-		def uriFixed = Crawler.truncateUriFromActionRaw( uri )
-		println uriFixed
+		def uris = ["http://wiki.openstreetmap.org/wiki/Key:abandoned?&action=raw", 
+			"http://wiki.openstreetmap.org/wiki/Key:drink:*"]
+		uris.each{uri->
+			println uri
+			def uriFixed = Crawler.truncateUriFromActionRaw( uri )
+			println uriFixed
+		}
 	}
 	
 	
@@ -117,6 +120,7 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 		def uris = [ "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
 			"http://wiki.openstreetmap.org/wiki/Key:amenity",
 			"http://wiki.openstreetmap.org/wiki/Tag:sports%3Dathletics",
+			"http://wiki.openstreetmap.org/wiki/Key:drink",
 			"http://wiki.openstreetmap.org/wiki/Tag:sport%3Dathletics",
 		   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Duniversity" ]
 		
