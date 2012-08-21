@@ -260,6 +260,7 @@ class RdfUtils {
 	 * @return
 	 */
 	String executeAnySparqlOnTdbAsHtml( String sparql ){
+		assert false
 		if (!sparql) return "Empty query."
 		sparql = sparql.trim()
 		String html = ''

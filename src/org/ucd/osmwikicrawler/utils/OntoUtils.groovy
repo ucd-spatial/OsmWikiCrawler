@@ -116,8 +116,10 @@ class OntoUtils {
 	static final String DBP_ONTO_DISAMBIGUATE = NAMESPACES['dbpo']+"wikiPageDisambiguates"
 	
 	/** SKOS vocabulary */
-	static final String SKOS_SCHEMA_NAME = NAMESPACES['sosm'] // + "Concepts"
+	static final String SKOS_SCHEMA_NAME = "http://wiki.openstreetmap.org/terms/OpenStreetMapScheme" // + "Concepts"
 	static final String SKOS_BROADER = NAMESPACES['skos'] + "broader"
+	static final String SKOS_CONCEPT_SCHEME = NAMESPACES['skos'] + "ConceptScheme"
+	static final String SKOS_TOP_CONCEPT = NAMESPACES['sosmt'] + "RootConcept"
 	static final String SKOS_EXACT_MATCH = NAMESPACES['skos'] + "exactMatch"
 	static final String SKOS_REL_MATCH = NAMESPACES['skos'] + "relatedMatch"
 	static final String SKOS_INSCHEME = NAMESPACES['skos'] + "inScheme"

@@ -202,6 +202,28 @@ class WikiRdf {
 		return text
 	}
 	
+	
+	/**
+	 * Add general meta data about the SKOS model.
+	 * 
+	 * Based on http://www.w3.org/TR/skos-primer/#secscheme
+	 * @param m
+	 * @return
+	 */
+	static private Model createSkosScheme( Model m ){
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT_SCHEME, m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/title", "Conceptualisation of geographic terms extracted from the OpenStreetMap Wiki website, and used in the OpenStreetMap vector map.", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/creator", "http://github.com/ucd-spatial/OsmWikiCrawler", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/publisher", "http://sites.google.com/site/andreaballatore", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/source", "http://wiki.openstreetmap.org", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/rights", "This material is Open Knowledge. http://opendefinition.org", m )
+		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_DEFINITION, "Dummy root concept. It does not carry any meaning.", m )
+		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT, m )
+		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_INSCHEME, OntoUtils.SKOS_SCHEMA_NAME, m )
+		
+		return m
+	}
+	
 	/**
 	 * 
 	 * 
@@ -214,6 +236,7 @@ class WikiRdf {
 		log.debug("buildJenaModelFromOntology...")
 		
 		Model m = getOsmWikiModel()
+		m = createSkosScheme( m )
 		assert m
 		def termsToOutput = ontology.terms.findAll{ !it.bFailedToBuild }
 		int i = 0
@@ -240,13 +263,23 @@ class WikiRdf {
 					if ( t.key ){
 						addStatement( t.uri, OntoUtils.SOSM_KEY_LABEL, t.key, m )
 					}
+					
+					if (Crawler.isOsmKeyPage(t.uri)){
+						// Key term
+						addStatement( t.uri, OntoUtils.SKOS_BROADER, OntoUtils.SKOS_TOP_CONCEPT, m )
+						addStatement( t.uri, OntoUtils.SKOS_PREFLABEL, t.key, m )
+					}
+					
 					if ( t.value && t.value != t.key ){
+						// Value term
 						if (t.value != "*" || ( t.value == "*" && !t.multiValues)){
 							addStatement( t.uri, OntoUtils.SOSM_VALUE_LABEL, t.value, m )
 							
 							// Skos
-							String skosLabel = t.key + "=" + t.value 
-							addStatement( t.uri, OntoUtils.SKOS_PREFLABEL, skosLabel, m )
+							if (Crawler.isOsmTagPage(t.uri)){
+								String skosLabel = t.key + "=" + t.value 
+								addStatement( t.uri, OntoUtils.SKOS_PREFLABEL, skosLabel, m )
+							}
 						}
 					}
 					
@@ -267,14 +300,14 @@ class WikiRdf {
 							addStatement( t.uri, OntoUtils.SOSM_KEY, it.trim(), m )
 							// Skos
 							addStatement( t.uri, OntoUtils.SKOS_BROADER, it.trim(), m )
-							addStatement( it.trim(), OntoUtils.SKOS_NARROWER, t.uri, m )
+							//addStatement( it.trim(), OntoUtils.SKOS_NARROWER, t.uri, m )
 						}
 					}
 					
 					// description of concept
 					if ( t?.description?.trim() ){
 						assert t.description.trim() != '' && t.description.trim() != null
-						addStatement( t.uri, OntoUtils.COMMENT_PRED, t?.description.trim(), m )
+						//addStatement( t.uri, OntoUtils.COMMENT_PRED, t?.description.trim(), m )
 						addStatement( t.uri, OntoUtils.SKOS_DEFINITION, t?.description.trim(), m )
 					}
 					
@@ -337,13 +370,38 @@ class WikiRdf {
 	
 	
 	/**
-	 * Validate SKOS with http://demo.semantic-web.at:8080/SkosServices/index
+	 * Note: Validate SKOS with 
+	 * http://demo.semantic-web.at:8080/SkosServices/index
 	 * 
 	 * @param m
 	 * @return
 	 */
 	static Model fixSkosConsistency( Model m ){
+		log.info(" Check consistency of SKOS vocabulary...")
+		// remove skos:related when skos:broader or skos:narrower  
 		
+		String sel = "SELECT ?a ?b { ?a <${OntoUtils.SKOS_BROADER}> ?b . " +  
+			 "?a <${OntoUtils.SKOS_RELATED}> ?b }"
+		def res = executeSparqlSelectOnModel( sel, m )
+		log.info( m.size() )
+		res.each{ r->
+			String a = r.get( "a" ).toString()
+			String b = r.get( "b" ).toString()
+			// remove skos:related entry
+			Resource s = m.createResource(a)
+			Resource p = m.createResource(OntoUtils.SKOS_RELATED)
+			Resource o = m.createResource(b)
+			m = m.remove( s, p, o )
+			m = m.remove( o, p, s )
+			
+			//String rem = "DELETE {?a <${OntoUtils.SKOS_RELATED}> ?b}"
+			//def res2 = executeSparqlUpdateOnModel( rem, m )
+			//log.info( "issue found with $a $b")
+		}
+		log.info( m.size() )
+		// remove multiple definitions
+		
+		log.info(" SKOS vocabulary valid.")
 		return m
 	}
 	
@@ -381,6 +439,41 @@ class WikiRdf {
 		qexec.close()
 		return b 
 	}
+	
+	/**
+	*
+	* @param sparql
+	* @return
+	*/
+   public static ResultSetRewindable executeSparqlUpdateOnModel( String sparql, Model m ){
+	   assert sparql
+	   //assert sparql.toLowerCase().trim() =~ "select","$sparql"
+	   log.debug("executeSparqlUpdateOnModel: executing sparql=${sparql}")
+	   Query query = QueryFactory.create( sparql )
+	   QueryExecution qexec = QueryExecutionFactory.create( query, m )
+	   ResultSet r = qexec.execSelect()
+	   ResultSetRewindable rwRs = ResultSetFactory.makeRewindable( r )
+	   qexec.close()
+	   return rwRs
+   }
+	
+	/**
+	 *
+	 * @param sparql
+	 * @return
+	 */
+	public static ResultSetRewindable executeSparqlSelectOnModel( String sparql, Model m ){
+		assert sparql
+		assert sparql.toLowerCase().trim() =~ "select","$sparql"
+		log.debug("executeSparqlSelectOnModel: executing sparql=${sparql}")
+		Query query = QueryFactory.create( sparql )
+		QueryExecution qexec = QueryExecutionFactory.create( query, m )
+		ResultSet r = qexec.execSelect()
+		ResultSetRewindable rwRs = ResultSetFactory.makeRewindable( r )
+		qexec.close()
+		return rwRs
+	}
+	
 	
 	/**
 	 * 

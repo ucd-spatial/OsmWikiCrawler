@@ -107,6 +107,9 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 		println("Generate test RDF statements...")
 		
 		def uris = [ "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
+			"http://wiki.openstreetmap.org/wiki/Key:amenity",
+			"http://wiki.openstreetmap.org/wiki/Tag:sports%3Dathletics",
+			"http://wiki.openstreetmap.org/wiki/Tag:sport%3Dathletics",
 		   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Duniversity" ]
 		
 		OsmOntology ontology = new OsmOntology()
