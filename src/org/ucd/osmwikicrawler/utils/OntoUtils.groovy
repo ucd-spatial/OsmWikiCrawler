@@ -90,6 +90,7 @@ class OntoUtils {
 	
 	static final String SOSM_REDIRECT = NAMESPACES['sosmt'] + "redirect"
 	static final String SOSM_IMPLIES = NAMESPACES['sosmt'] + "implies"
+	static final String SOSM_APPLIES_TO = NAMESPACES['sosmt'] + "appliesTo"
 	static final String SOSM_COMBINATION = NAMESPACES['sosmt'] + "combinedWith"
 	static final String LGD_MAPPED = NAMESPACES['sosmt'] + "lgdMapping"
 	static final String SEMOSM_SCORE_URI = NAMESPACES['sosm'] + "score#"

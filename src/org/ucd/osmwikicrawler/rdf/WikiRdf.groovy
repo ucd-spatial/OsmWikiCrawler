@@ -211,8 +211,10 @@ class WikiRdf {
 	 * @return
 	 */
 	static private Model createSkosScheme( Model m ){
+		
+		// general meta-data
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT_SCHEME, m )
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/title", "OSM Semantic Network.", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/title", "OSM Semantic Network", m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/language", "International English", m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/description", "Conceptualisation of geographic terms extracted from the OpenStreetMap Wiki website, and used in the OpenStreetMap vector map.", m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/creator", "http://sites.google.com/site/andreaballatore", m )
@@ -223,6 +225,9 @@ class WikiRdf {
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_DEFINITION, "Dummy root concept. It does not carry any meaning.", m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT, m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_INSCHEME, OntoUtils.SKOS_SCHEMA_NAME, m )
+		
+		// define new properties
+		// TODO
 		
 		return m
 	}
@@ -307,6 +312,11 @@ class WikiRdf {
 						}
 					}
 					
+					// types of data supported by tag
+					if (t.bNode) 		addStatement( t.uri, OntoUtils.SOSM_APPLIES_TO , "http://wiki.openstreetmap.org/wiki/Node", m )
+					if (t.bWay) 		addStatement( t.uri, OntoUtils.SOSM_APPLIES_TO , "http://wiki.openstreetmap.org/wiki/Way", m )
+					if (t.bRelation) 	addStatement( t.uri, OntoUtils.SOSM_APPLIES_TO , "http://wiki.openstreetmap.org/wiki/Relation", m )
+					
 					// description of concept
 					if ( t?.description?.trim() ){
 						assert t.description.trim() != '' && t.description.trim() != null
@@ -362,6 +372,8 @@ class WikiRdf {
 						//addStatement( t.uri, OntoUtils.PRED_EQUIVALENT_CLASS, t.lgdUri, m )
 						addStatement( t.uri, OntoUtils.SKOS_EXACT_MATCH, t.lgdUri, m )
 					}
+					
+					
 				}
 			}
 		}
@@ -382,11 +394,11 @@ class WikiRdf {
 	static Model fixSkosConsistency( Model m ){
 		log.info(" Check consistency of SKOS vocabulary...")
 		// remove skos:related when skos:broader or skos:narrower  
-		
+		// TODO: run the same test for NARROWER
 		String sel = "SELECT ?a ?b { ?a <${OntoUtils.SKOS_BROADER}> ?b . " +  
 			 "?a <${OntoUtils.SKOS_RELATED}> ?b }"
 		def res = executeSparqlSelectOnModel( sel, m )
-		log.info( m.size() )
+		log.debug( m.size() )
 		res.each{ r->
 			String a = r.get( "a" ).toString()
 			String b = r.get( "b" ).toString()
@@ -401,7 +413,7 @@ class WikiRdf {
 			//def res2 = executeSparqlUpdateOnModel( rem, m )
 			//log.info( "issue found with $a $b")
 		}
-		log.info( m.size() )
+		log.debug( m.size() )
 		// remove multiple definitions
 		
 		log.info(" SKOS vocabulary valid.")
