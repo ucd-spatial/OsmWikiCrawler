@@ -104,8 +104,6 @@ class OntoUtils {
 	static final String RDF_TYPE = NAMESPACES['rdfsy'] + "type"
 	static final String OWL_CLASS = NAMESPACES['owl'] + "Class"
 	static final String PRED_SUBCLASS = NAMESPACES['rdfsc'] + "subClassOf"
-	static final String PRED_BROADER = NAMESPACES['skos'] + "broader"
-	static final String PRED_RELATED = NAMESPACES['skos'] + "related"
 	static final String PRED_ONTO_TYPE = NAMESPACES['rdfsy'] + "type"
 	static final String PRED_SUBJECT = NAMESPACES['dct'] + "subject"
 	static final String PRED_SAME_AS = NAMESPACES['owl'] + "sameAs"
@@ -116,6 +114,18 @@ class OntoUtils {
 	static final String GEOLOC_PRED = NAMESPACES['geo']+"geometry"
 	static final String DBP_ONTO_PLACE = NAMESPACES['dbpo']+"Place"
 	static final String DBP_ONTO_DISAMBIGUATE = NAMESPACES['dbpo']+"wikiPageDisambiguates"
+	
+	/** SKOS vocabulary */
+	static final String SKOS_SCHEMA_NAME = NAMESPACES['sosm'] // + "Concepts"
+	static final String SKOS_BROADER = NAMESPACES['skos'] + "broader"
+	static final String SKOS_EXACT_MATCH = NAMESPACES['skos'] + "exactMatch"
+	static final String SKOS_REL_MATCH = NAMESPACES['skos'] + "relatedMatch"
+	static final String SKOS_INSCHEME = NAMESPACES['skos'] + "inScheme"
+	static final String SKOS_NARROWER = NAMESPACES['skos'] + "narrower"
+	static final String SKOS_DEFINITION = NAMESPACES['skos'] + "definition"
+	static final String SKOS_RELATED = NAMESPACES['skos'] + "related"
+	static final String SKOS_CONCEPT = NAMESPACES['skos'] + "Concept"
+	static final String SKOS_PREFLABEL = NAMESPACES['skos'] + "prefLabel"
 
 	static final def VECTOR_MERGE_MODES = ["skip","sum","max"]
 

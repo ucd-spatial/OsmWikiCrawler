@@ -204,6 +204,7 @@ class WikiRdf {
 	
 	/**
 	 * 
+	 * 
 	 * @param ontology
 	 * @return
 	 */
@@ -232,12 +233,20 @@ class WikiRdf {
 				// handle LINKS
 				if ( t.uri ){
 					
+					// add SKOS Concept and scheme info
+					addStatement( t.uri, OntoUtils.SKOS_INSCHEME, OntoUtils.SKOS_SCHEMA_NAME, m )
+					addStatement( t.uri, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT, m )
+					
 					if ( t.key ){
 						addStatement( t.uri, OntoUtils.SOSM_KEY_LABEL, t.key, m )
 					}
 					if ( t.value && t.value != t.key ){
 						if (t.value != "*" || ( t.value == "*" && !t.multiValues)){
 							addStatement( t.uri, OntoUtils.SOSM_VALUE_LABEL, t.value, m )
+							
+							// Skos
+							String skosLabel = t.key + "=" + t.value 
+							addStatement( t.uri, OntoUtils.SKOS_PREFLABEL, skosLabel, m )
 						}
 					}
 					
@@ -256,13 +265,17 @@ class WikiRdf {
 							assert Crawler.isOsmKeyPage( it.trim() )
 							Utils.validateUrl( it.trim() )
 							addStatement( t.uri, OntoUtils.SOSM_KEY, it.trim(), m )
-						} 
-						
+							// Skos
+							addStatement( t.uri, OntoUtils.SKOS_BROADER, it.trim(), m )
+							addStatement( it.trim(), OntoUtils.SKOS_NARROWER, t.uri, m )
+						}
 					}
 					
+					// description of concept
 					if ( t?.description?.trim() ){
 						assert t.description.trim() != '' && t.description.trim() != null
 						addStatement( t.uri, OntoUtils.COMMENT_PRED, t?.description.trim(), m )
+						addStatement( t.uri, OntoUtils.SKOS_DEFINITION, t?.description.trim(), m )
 					}
 					
 					// add implies links
@@ -294,12 +307,15 @@ class WikiRdf {
 						if ( Crawler.isOsmWikiUrl(link) ){
 							predicate = OntoUtils.SOSM_INTERNAL_LINK
 							Utils.validateUrl( link )
+							// Skos
+							addStatement( t.uri, OntoUtils.SKOS_RELATED, link, m )
 						} else {
 							if ( Crawler.isWikipediaLink( link ) ){
 								// get real link
 								String realLink = Utils.getLinkRedirection( link )
 								if (realLink) link = realLink
 								predicate = OntoUtils.SOSM_WIKIPEDIA_LINK
+								addStatement( t.uri, OntoUtils.SKOS_REL_MATCH, link, m )
 							}
 						}
 						addStatement( t.uri, predicate, link, m )
@@ -307,12 +323,27 @@ class WikiRdf {
 					
 					// LGD link
 					if ( t.lgdUri ){
-						addStatement( t.uri, OntoUtils.PRED_EQUIVALENT_CLASS, t.lgdUri, m )
+						//addStatement( t.uri, OntoUtils.PRED_EQUIVALENT_CLASS, t.lgdUri, m )
+						addStatement( t.uri, OntoUtils.SKOS_EXACT_MATCH, t.lgdUri, m )
 					}
 				}
 			}
 		}
+		
+		m = fixSkosConsistency( m )
 		log.debug("build ${m.size()} statements.")
+		return m
+	}
+	
+	
+	/**
+	 * Validate SKOS with http://demo.semantic-web.at:8080/SkosServices/index
+	 * 
+	 * @param m
+	 * @return
+	 */
+	static Model fixSkosConsistency( Model m ){
+		
 		return m
 	}
 	

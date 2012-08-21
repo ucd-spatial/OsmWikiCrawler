@@ -24,6 +24,10 @@ import junit.framework.TestResult;
 import org.apache.commons.validator.UrlValidator
 import org.ucd.osmwikicrawler.crawler.Crawler
 import org.ucd.osmwikicrawler.exceptions.RemoteServiceException
+import org.ucd.osmwikicrawler.ontology.Lgd;
+import org.ucd.osmwikicrawler.ontology.OsmOntoTerm;
+import org.ucd.osmwikicrawler.ontology.OsmOntology
+import org.ucd.osmwikicrawler.rdf.WikiRdf;
 import org.ucd.osmwikicrawler.utils.Utils
 import groovy.util.GroovyTestCase
 
@@ -71,6 +75,7 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 		   "http://wiki.openstreetmap.org/wiki/Proposed_features/Industrial_Plant",
 		   "http://wiki.openstreetmap.org/wiki/Tag:bridge%3Dyes",
 		   "http://wiki.openstreetmap.org/wiki/Tag:supervised%3Dyes",
+		   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Duniversity",
 		   "http://wiki.openstreetmap.org/wiki/Proposed_Features/Importance",
 		   "http://wiki.openstreetmap.org/wiki/Tag:shelter_type%3D",
 		   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dshelter",
@@ -78,6 +83,7 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 		   "http://wiki.openstreetmap.org/wiki/Proposed_features/Shop_(rather_than_amenity%3Dshoptype_above)" ]
 		String str = ''
 		problematicUris.each{ uri->
+			println ">>>>>> testBuildTermFromWikiPage URI = $uri"
 			def t = Crawler.buildTermFromWikiUrl( uri )
 			str += "<b>$uri</b> <br/>==> $t <br/><br/>"
 		}
@@ -97,12 +103,33 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 		}
 	}
 	
+	void testGenerateRDF(){
+		println("Generate test RDF statements...")
+		
+		def uris = [ "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
+		   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Duniversity" ]
+		
+		OsmOntology ontology = new OsmOntology()
+		
+		uris.each{ uri->
+			OsmOntoTerm termFromUri = Crawler.buildTermFromWikiUrl(uri)
+			Crawler.addTermToOntology( termFromUri, ontology )
+			
+			
+		}
+		
+		ontology = Lgd.matchOsmOntoTermsWithLgd( ontology )
+		WikiRdf.genRdfFiles( ontology )
+		
+	}
+	
 	public static void main(String[] args) {
 		// TODO: fix test logic.
 		OsmWikiCrawlerTests test = new OsmWikiCrawlerTests()
-		test.testBuildTermFromWikiPage()
-		test.testRedirection()
-		test.testWikitext()
-		test.testFixUris()
+		//test.testBuildTermFromWikiPage()
+		//test.testRedirection()
+		//test.testWikitext()
+		//test.testFixUris()
+		test.testGenerateRDF()
 	}
 }
