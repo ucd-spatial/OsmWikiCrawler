@@ -948,6 +948,20 @@ class Crawler {
 	}
 	
 	/**
+	* 
+	* @param uri, e.g. http://wiki.openstreetmap.org/wiki/Key:abandoned?&action=raw
+	* @return clean uri. e.g. http://wiki.openstreetmap.org/wiki/Key:abandoned
+	*/
+   public static String truncateUriFromActionRaw( String uri ){
+	   //if (uri =~ RAW_DATA_OPTION){
+	   String fixedUri = uri.replaceAll(/\?&action=raw$/,"")
+	   assert fixedUri
+	   return fixedUri
+	   //}
+	   //return uri
+   }
+	
+	/**
 	 * Visit uri and extract ontological info.
 	 * 
 	 * @param uri a OSM Wiki page.
@@ -960,6 +974,7 @@ class Crawler {
 		assert visitedUris != null
 		
 		uri = truncateUriFromLocalLink( uri )
+		uri = truncateUriFromActionRaw( uri )
 		
 		if (!isValidLinkForExpansion(uri)){
 			return ontology 

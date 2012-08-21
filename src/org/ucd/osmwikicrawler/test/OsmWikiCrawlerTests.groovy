@@ -65,6 +65,14 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 		println str
 	}
 	
+	void testTruncateUriFromActionRaw(){
+		println "testTruncateUriFromActionRaw"
+		String uri = "http://wiki.openstreetmap.org/wiki/Key:abandoned?&action=raw"
+		println uri
+		def uriFixed = Crawler.truncateUriFromActionRaw( uri )
+		println uriFixed
+	}
+	
 	
 	void testBuildTermFromWikiPage(){
 		def problematicUris = [ "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
@@ -133,6 +141,7 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 		//test.testRedirection()
 		//test.testWikitext()
 		//test.testFixUris()
+		test.testTruncateUriFromActionRaw()
 		test.testGenerateRDF()
 	}
 }
