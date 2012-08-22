@@ -403,11 +403,12 @@ class WikiRdf {
 			String a = r.get( "a" ).toString()
 			String b = r.get( "b" ).toString()
 			// remove skos:related entry
-			Resource s = m.createResource(a)
-			Resource p = m.createResource(OntoUtils.SKOS_RELATED)
-			Resource o = m.createResource(b)
-			m = m.remove( s, p, o )
-			m = m.remove( o, p, s )
+			def s = m.createResource(a)
+			def p = m.createProperty(OntoUtils.SKOS_RELATED)
+			def o = m.createResource(b)
+			
+			m = m.remove( ResourceFactory.createStatement(s, p, o) )
+			m = m.remove( ResourceFactory.createStatement(o, p, s) )
 			
 			//String rem = "DELETE {?a <${OntoUtils.SKOS_RELATED}> ?b}"
 			//def res2 = executeSparqlUpdateOnModel( rem, m )

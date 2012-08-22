@@ -122,15 +122,15 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 			"http://wiki.openstreetmap.org/wiki/Tag:sports%3Dathletics",
 			"http://wiki.openstreetmap.org/wiki/Key:drink",
 			"http://wiki.openstreetmap.org/wiki/Tag:sport%3Dathletics",
-		   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Duniversity" ]
+			"http://wiki.openstreetmap.org/wiki/Tag:amenity%3Duniversity",
+			"http://wiki.openstreetmap.org/wiki/Tag:landuse%3Dstreet",
+			"http://wiki.openstreetmap.org/wiki/Key:landuse" ]
 		
 		OsmOntology ontology = new OsmOntology()
 		
 		uris.each{ uri->
 			OsmOntoTerm termFromUri = Crawler.buildTermFromWikiUrl(uri)
 			Crawler.addTermToOntology( termFromUri, ontology )
-			
-			
 		}
 		
 		ontology = Lgd.matchOsmOntoTermsWithLgd( ontology )
