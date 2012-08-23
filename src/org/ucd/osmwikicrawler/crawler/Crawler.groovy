@@ -79,6 +79,10 @@ class Crawler {
 	static final int OSM_URI_MAX_LENGTH = 250
 	static final int OSM_URI_MIN_LENGTH = 29
 	
+	static final def URI_BLACK_LIST = [
+		"http://wiki.openstreetmap.org/wiki/Key:"
+		]
+	
 	static final String OSM_MULTI_VALUE_SEPARATOR = ' '
 
 	/**
@@ -97,6 +101,7 @@ class Crawler {
 	static OsmOntology createOntologyFromOsmWiki(){		
 		OsmOntology ontology = new OsmOntology()
 		Set visitedUris = []
+		visitedUris.addAll(URI_BLACK_LIST)
 		ontology = visitMapFeaturesPage( ontology, visitedUris )
 		// add CLUSTER pages
 		Set uris = getUrlsFromUrl( OSM_MAP_FEATURES_PAGE )
@@ -714,7 +719,7 @@ class Crawler {
 		}
 		if ( isOsmKeyPage(uri) ){
 			String s = uri.replace( OSM_KEY_BASE_URL, '')
-			assert s, "issue while clearing URI=$uri"
+			assert s, "issue while clearing URI='$uri'"
 			term.key = s.trim().toLowerCase()
 			term.value = term.key
 			term.wikiKeyUris = uri

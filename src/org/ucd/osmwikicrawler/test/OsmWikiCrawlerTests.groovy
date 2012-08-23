@@ -124,6 +124,7 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 			"http://wiki.openstreetmap.org/wiki/Tag:sports%3Dathletics",
 			"http://wiki.openstreetmap.org/wiki/Key:drink",
 			"http://wiki.openstreetmap.org/wiki/Key:operator",
+			//"http://wiki.openstreetmap.org/wiki/Key:",
 			"http://wiki.openstreetmap.org/wiki/Tag:sport%3Dathletics",
 			"http://wiki.openstreetmap.org/wiki/Proposed_features/wilderness_mountain_buildings",
 			"http://wiki.openstreetmap.org/wiki/Tag:amenity%3Duniversity",
@@ -132,8 +133,9 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 			"http://wiki.openstreetmap.org/wiki/Key:shelter_type",
 			"http://wiki.openstreetmap.org/wiki/Tag:sport%3Dskating",
 			"http://wiki.openstreetmap.org/wiki/Tag:landuse%3Dstreet",
-			"http://wiki.openstreetmap.org/wiki/Key:landuse" ]
-		//uris.addAll(problematicUris)
+			"http://wiki.openstreetmap.org/wiki/Key:landuse",
+			"http://wiki.openstreetmap.org/wiki/Tag:area%3Dyes" ]
+		uris.addAll(problematicUris)
 		
 		OsmOntology ontology = new OsmOntology()
 		
@@ -146,7 +148,6 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 		ontology = Lgd.matchOsmOntoTermsWithLgd( ontology )
 		WikiRdf.genRdfFiles( ontology )
 		
-		
 		//def m = WikiRdf.buildJenaModelFromOntology( ontology )
 		
 	}
@@ -154,11 +155,12 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 	public static void main(String[] args) {
 		// TODO: fix test logic.
 		OsmWikiCrawlerTests test = new OsmWikiCrawlerTests()
-		//test.testBuildTermFromWikiPage()
-		//test.testRedirection()
-		//test.testWikitext()
-		//test.testFixUris()
+		/*test.testBuildTermFromWikiPage()
+		test.testRedirection()
+		test.testWikitext()
+		test.testFixUris()
 		test.testTruncateUriFromActionRaw()
+		*/
 		test.testGenerateRDF()
 	}
 }
