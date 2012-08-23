@@ -237,6 +237,7 @@ class WikiRdf {
 	}
 	
 	static private Model createNewProperties( Model m ){
+		// LABELS
 		// keyLabel
 		addStatement( OntoUtils.SOSM_KEY_LABEL, OntoUtils.RDF_SUBPROPERTYOF, "http://www.w3.org/2000/01/rdf-schema#label", m )
 		addStatement( OntoUtils.SOSM_KEY_LABEL, OntoUtils.RDF_LABEL, "has OSM key", m )
@@ -250,6 +251,20 @@ class WikiRdf {
 		addStatement( OntoUtils.SOSM_VALUE_LABEL, OntoUtils.RDF_TYPE, "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", m )
 		addStatement( OntoUtils.SOSM_VALUE_LABEL, OntoUtils.RDF_DEFINEDBY, OntoUtils.SKOS_SCHEMA_NAME, m )
 		addStatement( OntoUtils.SOSM_VALUE_LABEL, OntoUtils.SKOS_DEFINITION, "This concept has the given value", m )
+		// RELATIONSHIPS
+		addStatement( OntoUtils.SOSM_KEY, OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
+		addStatement( OntoUtils.SOSM_KEY, OntoUtils.RDF_LABEL, "has OSM key", m )
+		addStatement( OntoUtils.SOSM_KEY, OntoUtils.RDF_DEFINEDBY, OntoUtils.SKOS_SCHEMA_NAME, m )
+		addStatement( OntoUtils.SOSM_KEY, OntoUtils.SKOS_DEFINITION, "This concept has the given key", m )
+		
+		addStatement( OntoUtils.SOSM_KEY, 			OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
+		addStatement( OntoUtils.SOSM_INTERNAL_LINK, OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
+		addStatement( OntoUtils.SOSM_REDIRECT, 		OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
+		addStatement( OntoUtils.SOSM_WIKIPEDIA_LINK,OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
+		addStatement( OntoUtils.SOSM_IMPLIES,		OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
+		addStatement( OntoUtils.SOSM_COMBINATION,	OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
+		addStatement( OntoUtils.SOSM_APPLIES_TO,	OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
+		
 		return m
 	}
 	
@@ -414,16 +429,39 @@ class WikiRdf {
 		return m
 	}
 	
-	static boolean hasStatement( String subject, String prop, Model m ){
+	/**
+	 * 
+	 * @param subject
+	 * @param prop
+	 * @param m
+	 * @return
+	 */
+	static boolean statementExists( String subject, String prop, Model m ){
+		assert subject
+		assert prop
+		assert m
 		
+		String sel = "ASK { <$subject> <$prop> ?a }"
+		//log.debug(sel)
+		boolean b = executeSparqlAskOnModel( sel, m )
+		return b
 	}
 	
 	static void addSkosPrefLabelToUri( String subject, String label, Model m ){
-		addStatement( subject, OntoUtils.SKOS_PREFLABEL, label, m )
+		// check if prefLabel exists
+		if (statementExists( subject, OntoUtils.SKOS_PREFLABEL, m)){
+			log.warn("prefLabel for $subject found. Skipping.")
+		} else {
+			addStatement( subject, OntoUtils.SKOS_PREFLABEL, label, m )
+		}
 	}
 	
 	static void addSkosDefinitionToUri( String subject, String definition, Model m ){
-		addStatement( subject, OntoUtils.SKOS_DEFINITION, definition, m )
+		if (statementExists( subject, OntoUtils.SKOS_DEFINITION, m)){
+			log.warn("skos:definition for $subject found. Skipping.")
+		} else {
+			addStatement( subject, OntoUtils.SKOS_DEFINITION, definition, m )
+		}
 	}
 	
 	
@@ -509,6 +547,22 @@ class WikiRdf {
 		return osmWikiModel
 	}
 	
+	/**
+	*
+	* @param sparql
+	* @return
+	*/
+   static Boolean executeSparqlAskOnModel( String sparql, Model m ){
+	   assert sparql
+	   assert sparql.toLowerCase().trim() =~ "ask","sparql=${sparql}"
+	   log.debug("executeSparqlAskOnModel: executing sparql=${sparql}")
+	   Query query = QueryFactory.create( sparql )
+	   QueryExecution qexec = QueryExecutionFactory.create( query, m )
+	   Boolean b = qexec.execAsk()
+	   assert b!= null
+	   qexec.close()
+	   return b
+   }
 	
 	
 	/**

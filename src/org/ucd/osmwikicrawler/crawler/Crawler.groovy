@@ -714,7 +714,7 @@ class Crawler {
 		}
 		if ( isOsmKeyPage(uri) ){
 			String s = uri.replace( OSM_KEY_BASE_URL, '')
-			assert s
+			assert s, "issue while clearing URI=$uri"
 			term.key = s.trim().toLowerCase()
 			term.value = term.key
 			term.wikiKeyUris = uri

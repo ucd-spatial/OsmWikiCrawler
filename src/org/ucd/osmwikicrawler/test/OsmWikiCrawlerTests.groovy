@@ -142,8 +142,12 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 			Crawler.addTermToOntology( termFromUri, ontology )
 		}
 		
+		
 		ontology = Lgd.matchOsmOntoTermsWithLgd( ontology )
 		WikiRdf.genRdfFiles( ontology )
+		
+		
+		//def m = WikiRdf.buildJenaModelFromOntology( ontology )
 		
 	}
 	

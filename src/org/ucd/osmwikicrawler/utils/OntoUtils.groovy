@@ -134,9 +134,8 @@ class OntoUtils {
 	static final String SKOS_CONCEPT = NAMESPACES['skos'] + "Concept"
 	static final String SKOS_PREFLABEL = NAMESPACES['skos'] + "prefLabel"
 	static final String SKOS_ALTLABEL = NAMESPACES['skos'] + "altLabel"
+	static final String SKOS_SEMREL = NAMESPACES['skos'] + "semanticRelation"
 	
-	
-
 	static final def VECTOR_MERGE_MODES = ["skip","sum","max"]
 
 	static final int SPARQL_MAX_RETRIALS = 3
