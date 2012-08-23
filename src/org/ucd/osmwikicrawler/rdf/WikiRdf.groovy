@@ -443,8 +443,14 @@ class WikiRdf {
 		
 		String sel = "ASK { <$subject> <$prop> ?a }"
 		//log.debug(sel)
-		boolean b = executeSparqlAskOnModel( sel, m )
-		return b
+		try{
+			boolean b = executeSparqlAskOnModel( sel, m )
+			return b
+		} catch (com.hp.hpl.jena.query.QueryParseException e) {
+			// option in case of exception
+			log.warn "invalid query '$sel' --- skipping."
+			return false
+		}
 	}
 	
 	static void addSkosPrefLabelToUri( String subject, String label, Model m ){
@@ -553,7 +559,7 @@ class WikiRdf {
 	* @param sparql
 	* @return
 	*/
-   static Boolean executeSparqlAskOnModel( String sparql, Model m ){
+   public static Boolean executeSparqlAskOnModel( String sparql, Model m ){
 	   assert sparql
 	   assert sparql.toLowerCase().trim() =~ "ask","sparql=${sparql}"
 	   log.debug("executeSparqlAskOnModel: executing sparql=${sparql}")

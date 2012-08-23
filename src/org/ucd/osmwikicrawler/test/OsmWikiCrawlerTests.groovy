@@ -119,6 +119,8 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 	void testGenerateRDF(){
 		println("Generate test RDF statements...")
 		
+		
+		
 		def uris = [ "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
 			"http://wiki.openstreetmap.org/wiki/Key:amenity",
 			"http://wiki.openstreetmap.org/wiki/Tag:sports%3Dathletics",
@@ -148,7 +150,9 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 		ontology = Lgd.matchOsmOntoTermsWithLgd( ontology )
 		WikiRdf.genRdfFiles( ontology )
 		
-		//def m = WikiRdf.buildJenaModelFromOntology( ontology )
+		def m = WikiRdf.buildJenaModelFromOntology( ontology )
+		
+		//WikiRdf.statementExists("<http://wiki.openstreetmap.org/wiki/Tag:source%3Dtiger_import_#{date}n","http://www.w3.org/2004/02/skos/core#prefLabel",m)
 		
 	}
 	
