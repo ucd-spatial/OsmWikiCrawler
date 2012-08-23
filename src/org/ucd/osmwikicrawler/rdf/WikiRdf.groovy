@@ -468,7 +468,8 @@ class WikiRdf {
 	/**
 	 * Note: Validate SKOS with 
 	 * http://demo.semantic-web.at:8080/SkosServices/index
-	 * 
+	 * and 
+	 * http://www.seco.tkk.fi/tools/skosify
 	 * 
 	 * Example: https://www.seegrid.csiro.au/subversion/CGI_CDTGVocabulary/tags/SKOSVocabularies/
 	 * 
