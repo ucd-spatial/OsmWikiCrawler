@@ -39,6 +39,21 @@ import groovy.util.GroovyTestCase
  */
 class OsmWikiCrawlerTests extends GroovyTestCase {
 	
+	static def problematicUris = [ "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
+		"http://wiki.openstreetmap.org/wiki/Tag:shop%3Dhardware",
+	   "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dsecondary",
+	   "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
+	   "http://wiki.openstreetmap.org/wiki/Key:addr#Using_Address_Interpolation_for_partial_surveys",
+	   "http://wiki.openstreetmap.org/wiki/Proposed_features/Industrial_Plant",
+	   "http://wiki.openstreetmap.org/wiki/Tag:bridge%3Dyes",
+	   "http://wiki.openstreetmap.org/wiki/Tag:supervised%3Dyes",
+	   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Duniversity",
+	   "http://wiki.openstreetmap.org/wiki/Proposed_Features/Importance",
+	   "http://wiki.openstreetmap.org/wiki/Tag:shelter_type%3D",
+	   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dshelter",
+	   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Drestaurant",
+	   "http://wiki.openstreetmap.org/wiki/Proposed_features/Shop_(rather_than_amenity%3Dshoptype_above)" ]
+	
 	void testRedirection(){
 		def uris = [ "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
 			"http://wiki.openstreetmap.org/wiki/Proposed_features/access_restrictions_1.5" ]
@@ -78,20 +93,7 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 	
 	
 	void testBuildTermFromWikiPage(){
-		def problematicUris = [ "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
-			"http://wiki.openstreetmap.org/wiki/Tag:shop%3Dhardware",
-		   "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dsecondary",
-		   "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
-		   "http://wiki.openstreetmap.org/wiki/Key:addr#Using_Address_Interpolation_for_partial_surveys",
-		   "http://wiki.openstreetmap.org/wiki/Proposed_features/Industrial_Plant",
-		   "http://wiki.openstreetmap.org/wiki/Tag:bridge%3Dyes",
-		   "http://wiki.openstreetmap.org/wiki/Tag:supervised%3Dyes",
-		   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Duniversity",
-		   "http://wiki.openstreetmap.org/wiki/Proposed_Features/Importance",
-		   "http://wiki.openstreetmap.org/wiki/Tag:shelter_type%3D",
-		   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dshelter",
-		   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Drestaurant",
-		   "http://wiki.openstreetmap.org/wiki/Proposed_features/Shop_(rather_than_amenity%3Dshoptype_above)" ]
+		
 		String str = ''
 		problematicUris.each{ uri->
 			println ">>>>>> testBuildTermFromWikiPage URI = $uri"
@@ -121,10 +123,17 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 			"http://wiki.openstreetmap.org/wiki/Key:amenity",
 			"http://wiki.openstreetmap.org/wiki/Tag:sports%3Dathletics",
 			"http://wiki.openstreetmap.org/wiki/Key:drink",
+			"http://wiki.openstreetmap.org/wiki/Key:operator",
 			"http://wiki.openstreetmap.org/wiki/Tag:sport%3Dathletics",
+			"http://wiki.openstreetmap.org/wiki/Proposed_features/wilderness_mountain_buildings",
 			"http://wiki.openstreetmap.org/wiki/Tag:amenity%3Duniversity",
+			"http://wiki.openstreetmap.org/wiki/Operator",
+			//"http://wiki.openstreetmap.org/wiki/Map_features",
+			"http://wiki.openstreetmap.org/wiki/Key:shelter_type",
+			"http://wiki.openstreetmap.org/wiki/Tag:sport%3Dskating",
 			"http://wiki.openstreetmap.org/wiki/Tag:landuse%3Dstreet",
 			"http://wiki.openstreetmap.org/wiki/Key:landuse" ]
+		//uris.addAll(problematicUris)
 		
 		OsmOntology ontology = new OsmOntology()
 		

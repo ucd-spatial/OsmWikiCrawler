@@ -111,8 +111,11 @@ class OntoUtils {
 	static final String PRED_SAME_AS = NAMESPACES['owl'] + "sameAs"
 	static final String PRED_EQUIVALENT_CLASS = NAMESPACES['owl'] + "equivalentClass"
 	static final String DBPO_ABSTRACT = NAMESPACES['dbpo'] + "abstract"
-	static final String LABEL_PRED = NAMESPACES['rdfsc'] + "label"
+	static final String RDF_LABEL = NAMESPACES['rdfsc'] + "label"
 	static final String COMMENT_PRED = NAMESPACES['rdfsc']+"comment"
+	static final String RDF_SUBPROPERTYOF = NAMESPACES['rdfsc']+"subPropertyOf"
+	static final String RDF_DEFINEDBY =  NAMESPACES['rdfsc']+"isDefinedBy"
+	
 	static final String GEOLOC_PRED = NAMESPACES['geo']+"geometry"
 	static final String DBP_ONTO_PLACE = NAMESPACES['dbpo']+"Place"
 	static final String DBP_ONTO_DISAMBIGUATE = NAMESPACES['dbpo']+"wikiPageDisambiguates"
@@ -130,6 +133,9 @@ class OntoUtils {
 	static final String SKOS_RELATED = NAMESPACES['skos'] + "related"
 	static final String SKOS_CONCEPT = NAMESPACES['skos'] + "Concept"
 	static final String SKOS_PREFLABEL = NAMESPACES['skos'] + "prefLabel"
+	static final String SKOS_ALTLABEL = NAMESPACES['skos'] + "altLabel"
+	
+	
 
 	static final def VECTOR_MERGE_MODES = ["skip","sum","max"]
 

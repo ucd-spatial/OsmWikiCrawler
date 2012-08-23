@@ -222,13 +222,34 @@ class WikiRdf {
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/source", "http://wiki.openstreetmap.org", m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/rights", "This material is Open Knowledge. http://opendefinition.org", m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/date", new Date().toString(), m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, OntoUtils.SKOS_PREFLABEL, "OSM Semantic Network", m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_DEFINITION, "Dummy root concept. It does not carry any meaning.", m )
+		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_PREFLABEL, "root concept", m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT, m )
-		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_INSCHEME, OntoUtils.SKOS_SCHEMA_NAME, m )
+		addStatement( OntoUtils.SKOS_TOP_CONCEPT, "http://www.w3.org/2004/02/skos/core#topConceptOf", OntoUtils.SKOS_SCHEMA_NAME, m )
+		
+		
 		
 		// define new properties
 		// TODO
-		
+		m = createNewProperties(m)
+		return m
+	}
+	
+	static private Model createNewProperties( Model m ){
+		// keyLabel
+		addStatement( OntoUtils.SOSM_KEY_LABEL, OntoUtils.RDF_SUBPROPERTYOF, "http://www.w3.org/2000/01/rdf-schema#label", m )
+		addStatement( OntoUtils.SOSM_KEY_LABEL, OntoUtils.RDF_LABEL, "has OSM key", m )
+		addStatement( OntoUtils.SOSM_KEY_LABEL, OntoUtils.RDF_TYPE, "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", m )
+		addStatement( OntoUtils.SOSM_KEY_LABEL, OntoUtils.RDF_DEFINEDBY, OntoUtils.SKOS_SCHEMA_NAME, m )
+		addStatement( OntoUtils.SOSM_KEY_LABEL, OntoUtils.SKOS_DEFINITION, "This concept belongs to the given key", m )
+
+		// valueLabel
+		addStatement( OntoUtils.SOSM_VALUE_LABEL, OntoUtils.RDF_SUBPROPERTYOF, "http://www.w3.org/2000/01/rdf-schema#label", m )
+		addStatement( OntoUtils.SOSM_VALUE_LABEL, OntoUtils.RDF_LABEL, "has OSM value", m )
+		addStatement( OntoUtils.SOSM_VALUE_LABEL, OntoUtils.RDF_TYPE, "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", m )
+		addStatement( OntoUtils.SOSM_VALUE_LABEL, OntoUtils.RDF_DEFINEDBY, OntoUtils.SKOS_SCHEMA_NAME, m )
+		addStatement( OntoUtils.SOSM_VALUE_LABEL, OntoUtils.SKOS_DEFINITION, "This concept has the given value", m )
 		return m
 	}
 	
@@ -275,7 +296,12 @@ class WikiRdf {
 					if (Crawler.isOsmKeyPage(t.uri)){
 						// Key term
 						addStatement( t.uri, OntoUtils.SKOS_BROADER, OntoUtils.SKOS_TOP_CONCEPT, m )
-						addStatement( t.uri, OntoUtils.SKOS_PREFLABEL, t.key, m )
+						
+						
+						String altLabel = "k_" + t.key
+						addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, t.key, m )
+						addSkosPrefLabelToUri( t.uri, altLabel, m )
+						
 					}
 					
 					if ( t.value && t.value != t.key ){
@@ -285,8 +311,13 @@ class WikiRdf {
 							
 							// Skos
 							if (Crawler.isOsmTagPage(t.uri)){
-								String skosLabel = t.key + "=" + t.value 
-								addStatement( t.uri, OntoUtils.SKOS_PREFLABEL, skosLabel, m )
+								String skosLabel = "k_" + t.key + " v_" + t.value
+								addSkosPrefLabelToUri(t.uri,skosLabel, m)
+								
+								String altLabel = t.key + "=" + t.value
+								addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, altLabel, m )
+								altLabel = t.key + "#" + t.value
+								addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, altLabel, m )
 							}
 						}
 					}
@@ -313,15 +344,15 @@ class WikiRdf {
 					}
 					
 					// types of data supported by tag
-					if (t.bNode) 		addStatement( t.uri, OntoUtils.SOSM_APPLIES_TO , "http://wiki.openstreetmap.org/wiki/Node", m )
-					if (t.bWay) 		addStatement( t.uri, OntoUtils.SOSM_APPLIES_TO , "http://wiki.openstreetmap.org/wiki/Way", m )
-					if (t.bRelation) 	addStatement( t.uri, OntoUtils.SOSM_APPLIES_TO , "http://wiki.openstreetmap.org/wiki/Relation", m )
+					if (t.bNode) 		{addStatement( t.uri, OntoUtils.SOSM_APPLIES_TO , "http://wiki.openstreetmap.org/wiki/Node", m )}
+					if (t.bWay) 		{addStatement( t.uri, OntoUtils.SOSM_APPLIES_TO , "http://wiki.openstreetmap.org/wiki/Way", m )}
+					if (t.bRelation) 	{addStatement( t.uri, OntoUtils.SOSM_APPLIES_TO , "http://wiki.openstreetmap.org/wiki/Relation", m )}
 					
 					// description of concept
 					if ( t?.description?.trim() ){
 						assert t.description.trim() != '' && t.description.trim() != null
 						//addStatement( t.uri, OntoUtils.COMMENT_PRED, t?.description.trim(), m )
-						addStatement( t.uri, OntoUtils.SKOS_DEFINITION, t?.description.trim(), m )
+						addSkosDefinitionToUri( t.uri, t?.description.trim(), m )
 					}
 					
 					// add implies links
@@ -383,10 +414,25 @@ class WikiRdf {
 		return m
 	}
 	
+	static boolean hasStatement( String subject, String prop, Model m ){
+		
+	}
+	
+	static void addSkosPrefLabelToUri( String subject, String label, Model m ){
+		addStatement( subject, OntoUtils.SKOS_PREFLABEL, label, m )
+	}
+	
+	static void addSkosDefinitionToUri( String subject, String definition, Model m ){
+		addStatement( subject, OntoUtils.SKOS_DEFINITION, definition, m )
+	}
+	
 	
 	/**
 	 * Note: Validate SKOS with 
 	 * http://demo.semantic-web.at:8080/SkosServices/index
+	 * 
+	 * 
+	 * Example: https://www.seegrid.csiro.au/subversion/CGI_CDTGVocabulary/tags/SKOSVocabularies/
 	 * 
 	 * @param m
 	 * @return
@@ -394,11 +440,10 @@ class WikiRdf {
 	static Model fixSkosConsistency( Model m ){
 		log.info(" Check consistency of SKOS vocabulary...")
 		// remove skos:related when skos:broader or skos:narrower  
-		// TODO: run the same test for NARROWER
 		String sel = "SELECT ?a ?b { ?a <${OntoUtils.SKOS_BROADER}> ?b . " +  
 			 "?a <${OntoUtils.SKOS_RELATED}> ?b }"
 		def res = executeSparqlSelectOnModel( sel, m )
-		log.debug( m.size() )
+		int sz = m.size()
 		res.each{ r->
 			String a = r.get( "a" ).toString()
 			String b = r.get( "b" ).toString()
@@ -413,10 +458,38 @@ class WikiRdf {
 			//String rem = "DELETE {?a <${OntoUtils.SKOS_RELATED}> ?b}"
 			//def res2 = executeSparqlUpdateOnModel( rem, m )
 			//log.info( "issue found with $a $b")
+			assert sz > m.size()
 		}
-		log.debug( m.size() )
-		// remove multiple definitions
 		
+		sel = "SELECT ?a ?b { ?a <${OntoUtils.SKOS_NARROWER}> ?b . " +
+		"?a <${OntoUtils.SKOS_RELATED}> ?b }"
+		res = executeSparqlSelectOnModel( sel, m )
+		res.each{ r->
+		   String a = r.get( "a" ).toString()
+		   String b = r.get( "b" ).toString()
+		   // remove skos:related entry
+		   def s = m.createResource(a)
+		   def p = m.createProperty(OntoUtils.SKOS_RELATED)
+		   def o = m.createResource(b)
+		   
+		   m = m.remove( ResourceFactory.createStatement(s, p, o) )
+		   m = m.remove( ResourceFactory.createStatement(o, p, s) )
+		   
+		   //String rem = "DELETE {?a <${OntoUtils.SKOS_RELATED}> ?b}"
+		   //def res2 = executeSparqlUpdateOnModel( rem, m )
+		   //log.info( "issue found with $a $b")
+		   assert sz > m.size()
+	   }
+		
+		// TODO: run the same test for NARROWER
+		
+		// TODO: fix multiple PREFLABELS and DEFINITIONS
+		
+		// TODO: fix missing skos:prefLabel
+		
+		
+		// remove multiple definitions
+		assert sz >= m.size()
 		log.info(" SKOS vocabulary valid.")
 		return m
 	}

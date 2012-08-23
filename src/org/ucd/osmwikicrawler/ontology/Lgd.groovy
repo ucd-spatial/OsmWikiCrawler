@@ -302,7 +302,7 @@ class Lgd {
 	 */
 	String getLgdLabel( String uri ){
 		assert uri
-		String query = " SELECT ?label { <${uri}> <${OntoUtilsService.LABEL_PRED}> ?label FILTER (lang(?label) = \"en\") . }"
+		String query = " SELECT ?label { <${uri}> <${OntoUtilsService.RDF_LABEL}> ?label FILTER (lang(?label) = \"en\") . }"
 		
 		def res = executeLgdSparqlSelect( query )
 		def labels = ontoUtilsService.getValuesFromJenaResultSet( res, "label", query )
