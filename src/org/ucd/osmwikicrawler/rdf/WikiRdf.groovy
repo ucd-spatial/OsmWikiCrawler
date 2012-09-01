@@ -272,6 +272,7 @@ class WikiRdf {
 		addStatement( OntoUtils.SOSM_INTERNAL_LINK, OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
 		addStatement( OntoUtils.SOSM_REDIRECT, 		OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
 		addStatement( OntoUtils.SOSM_WIKIPEDIA_LINK,OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
+		addStatement( OntoUtils.SOSM_PHOTO,			OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
 		addStatement( OntoUtils.SOSM_IMPLIES,		OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
 		addStatement( OntoUtils.SOSM_COMBINATION,	OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
 		addStatement( OntoUtils.SOSM_APPLIES_TO,	OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
