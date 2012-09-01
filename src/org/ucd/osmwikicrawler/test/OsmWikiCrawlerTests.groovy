@@ -119,15 +119,14 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 	void testGenerateRDF(){
 		println("Generate test RDF statements...")
 		
-		
-		
 		def uris = [ "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
 			"http://wiki.openstreetmap.org/wiki/Key:amenity",
+			/*
 			"http://wiki.openstreetmap.org/wiki/Tag:sports%3Dathletics",
-			"http://wiki.openstreetmap.org/wiki/Key:drink",
-			"http://wiki.openstreetmap.org/wiki/Key:operator",
+			//"http://wiki.openstreetmap.org/wiki/Key:drink",
+			//"http://wiki.openstreetmap.org/wiki/Key:operator",
 			//"http://wiki.openstreetmap.org/wiki/Key:",
-			"http://wiki.openstreetmap.org/wiki/Tag:sport%3Dathletics",
+			//"http://wiki.openstreetmap.org/wiki/Tag:sport%3Dathletics",
 			"http://wiki.openstreetmap.org/wiki/Proposed_features/wilderness_mountain_buildings",
 			"http://wiki.openstreetmap.org/wiki/Tag:amenity%3Duniversity",
 			"http://wiki.openstreetmap.org/wiki/Operator",
@@ -135,6 +134,7 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 			"http://wiki.openstreetmap.org/wiki/Key:shelter_type",
 			"http://wiki.openstreetmap.org/wiki/Tag:sport%3Dskating",
 			"http://wiki.openstreetmap.org/wiki/Tag:landuse%3Dstreet",
+			*/
 			"http://wiki.openstreetmap.org/wiki/Key:landuse",
 			"http://wiki.openstreetmap.org/wiki/Tag:area%3Dyes" ]
 		uris.addAll(problematicUris)

@@ -304,6 +304,8 @@ class WikiRdf {
 					addStatement( t.uri, OntoUtils.SKOS_INSCHEME, OntoUtils.SKOS_SCHEMA_NAME, m )
 					addStatement( t.uri, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT, m )
 					
+					println("TEST: " + t)
+					
 					if ( t.key ){
 						addStatement( t.uri, OntoUtils.SOSM_KEY_LABEL, t.key, m )
 					}
@@ -342,6 +344,18 @@ class WikiRdf {
 						values.each{
 							String val = it.trim()
 							addStatement( t.uri, OntoUtils.SOSM_VALUE_LABEL, val, m )
+						}
+					}
+					
+					if ( t.sourceUri ){
+						addStatement( t.uri, OntoUtils.DC_SOURCE, t.sourceUri, m )
+					}
+					
+					if ( t.photoUris ){
+						def values = t.photoUris.split(' ')*.trim()
+						values.each{
+							String val = it.trim()
+							addStatement( t.uri, OntoUtils.SOSM_PHOTO, val, m )
 						}
 					}
 					

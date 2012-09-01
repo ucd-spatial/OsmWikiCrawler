@@ -306,7 +306,7 @@ class Crawler {
 			return null
 		}
 		
-		OsmOntoTerm t = new OsmOntoTerm()
+		OsmOntoTerm t = newOsmOntoTerm(sourceUri)
 		t.foundInOverviewPage = true
 		
 		// extract data
@@ -624,6 +624,7 @@ class Crawler {
 		t1.combinationUris = mergeStrings( t1.combinationUris, t2.combinationUris )
 		t1.tagCommunityStatus = mergeStrings( t1.tagCommunityStatus, t2.tagCommunityStatus )
 		t1.redirectionUri = mergeStrings( t1.redirectionUri, t2.redirectionUri )
+		t1.sourceUri = mergeStrings( t1.sourceUri, t2.sourceUri )
 
 		t1.foundInOverviewPage = mergeBooleans( t1.foundInOverviewPage, t2.foundInOverviewPage )
 		t1.foundInSinglePage = mergeBooleans( t1.foundInSinglePage, t2.foundInSinglePage )
@@ -681,6 +682,12 @@ class Crawler {
 		return a || b
 	}
 	
+	static private OsmOntoTerm newOsmOntoTerm( String sourceUri ){
+		OsmOntoTerm term = new OsmOntoTerm()
+		term.sourceUri = sourceUri
+		return term
+	}
+	
 	/**
 	 * Parse page such as:
 	 * 		http://wiki.openstreetmap.org/wiki/Tag:shop%3Ddeli
@@ -694,7 +701,7 @@ class Crawler {
 		assert isOsmTagPage(uri) || isOsmKeyPage(uri)
 
 
-		OsmOntoTerm term = new OsmOntoTerm()
+		OsmOntoTerm term = newOsmOntoTerm( uri )
 		term.uri = uri
 		term.foundInSinglePage = true
 		
@@ -1166,7 +1173,7 @@ class Crawler {
 		String redirectionLink = getWikiRedirection( uri )
 		if ( redirectionLink ){
 			// the page is only a redirection.
-			OsmOntoTerm redirTerm = new OsmOntoTerm()
+			OsmOntoTerm redirTerm = newOsmOntoTerm( uri )
 			redirTerm.uri = uri
 			redirTerm.redirectionUri = redirectionLink
 			return redirTerm
@@ -1417,7 +1424,7 @@ class Crawler {
 		String html = Utils.getWebPageByURI( uri, false )?.content
 		
 		// new term
-		OsmOntoTerm term = new OsmOntoTerm()
+		OsmOntoTerm term = newOsmOntoTerm( uri )
 		term.foundInProposedPage = true
 		term.uri = uri
 		

@@ -55,6 +55,7 @@ class OsmOntoTerm {
 	String combinationUris = ''
 	String renderingUri = ''
 	String photoUris = ''
+	String sourceUri = ''
 	
 	String tagCommunityStatus = ''
 	

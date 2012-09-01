@@ -45,6 +45,7 @@ class OntoUtils {
 	
 	/** NAMESPACES */
 	static final String SEMOSM_ROOT_URL = "http://wiki.openstreetmap.org/"
+	static final String OUR_LINKED_DATA_SERVER = "http://spatial.ucd.ie"
 	
 	static final def NAMESPACES = [
 	    skos:"http://www.w3.org/2004/02/skos/core#",
@@ -65,6 +66,8 @@ class OntoUtils {
 	    rdfsy:"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
 		rdfsc:"http://www.w3.org/2000/01/rdf-schema#",
 		dct:"http://purl.org/dc/terms/",
+		osn:"$OUR_LINKED_DATA_SERVER/osmsemnet/",
+		osnt:"$OUR_LINKED_DATA_SERVER/osmsemnet/terms#",
 		sosm: SEMOSM_ROOT_URL,
 		sosmv: SEMOSM_ROOT_URL + "wiki/OSMSemanticNetwork#",
 		sosmt: SEMOSM_ROOT_URL+"terms/",
@@ -82,18 +85,20 @@ class OntoUtils {
 	
 	/** Semantic OSM ontological predicates */
 	static final String MANUALLY_MAPPED = NAMESPACES['sosmt'] + "manualMapping"
-	static final String SOSM_WIKIPEDIA_LINK = NAMESPACES['sosmv'] + "wikipediaLink"
-	static final String SOSM_INTERNAL_LINK = NAMESPACES['sosmv'] + "link"
-	static final String SOSM_KEY = NAMESPACES['sosmv'] + "key"
-	static final String SOSM_KEY_LABEL = NAMESPACES['sosmv'] + "keyLabel"
-	static final String SOSM_VALUE = NAMESPACES['sosmv'] + "value"
-	static final String SOSM_VALUE_LABEL = NAMESPACES['sosmv'] + "valueLabel"
+	static final String SOSM_WIKIPEDIA_LINK = NAMESPACES['osnt'] + "wikipediaLink"
+	static final String SOSM_INTERNAL_LINK = NAMESPACES['osnt'] + "link"
+	static final String SOSM_KEY = NAMESPACES['osnt'] + "key"
+	static final String SOSM_KEY_LABEL = NAMESPACES['osnt'] + "keyLabel"
+	static final String SOSM_VALUE = NAMESPACES['osnt'] + "value"
+	static final String SOSM_VALUE_LABEL = NAMESPACES['osnt'] + "valueLabel"
+	static final String SOSM_PHOTO = NAMESPACES['osnt'] + "image"
+	static final String SOSM_REDIRECT = NAMESPACES['osnt'] + "redirect"
+	static final String SOSM_IMPLIES = NAMESPACES['osnt'] + "implies"
+	static final String SOSM_APPLIES_TO = NAMESPACES['osnt'] + "appliesTo"
+	static final String SOSM_COMBINATION = NAMESPACES['osnt'] + "combinedWith"
+	static final String LGD_MAPPED = NAMESPACES['osnt'] + "lgdMapping"
 	
-	static final String SOSM_REDIRECT = NAMESPACES['sosmv'] + "redirect"
-	static final String SOSM_IMPLIES = NAMESPACES['sosmv'] + "implies"
-	static final String SOSM_APPLIES_TO = NAMESPACES['sosmv'] + "appliesTo"
-	static final String SOSM_COMBINATION = NAMESPACES['sosmv'] + "combinedWith"
-	static final String LGD_MAPPED = NAMESPACES['sosmv'] + "lgdMapping"
+	// obsolete
 	static final String SEMOSM_SCORE_URI = NAMESPACES['sosm'] + "score#"
 	static final String GRAPH_ROOT_NODE = NAMESPACES['sosm'] + "ROOT"
 	static final String SEMOSM_HAS_KEYWORD = NAMESPACES['sosmt'] + "hasKeyword"
@@ -108,6 +113,7 @@ class OntoUtils {
 	static final String PRED_SUBCLASS = NAMESPACES['rdfsc'] + "subClassOf"
 	static final String PRED_ONTO_TYPE = NAMESPACES['rdfsy'] + "type"
 	static final String PRED_SUBJECT = NAMESPACES['dct'] + "subject"
+	static final String DC_SOURCE = "http://purl.org/dc/elements/1.1/source"
 	static final String PRED_SAME_AS = NAMESPACES['owl'] + "sameAs"
 	static final String PRED_EQUIVALENT_CLASS = NAMESPACES['owl'] + "equivalentClass"
 	static final String DBPO_ABSTRACT = NAMESPACES['dbpo'] + "abstract"
@@ -121,10 +127,11 @@ class OntoUtils {
 	static final String DBP_ONTO_DISAMBIGUATE = NAMESPACES['dbpo']+"wikiPageDisambiguates"
 	
 	/** SKOS vocabulary */
-	static final String SKOS_SCHEMA_NAME = "http://wiki.openstreetmap.org/wiki/OSMSemanticNetwork" // + "Concepts"
+	
+	static final String SKOS_SCHEMA_NAME = NAMESPACES['osn'] + "OSMSemanticNetwork"
 	static final String SKOS_BROADER = NAMESPACES['skos'] + "broader"
 	static final String SKOS_CONCEPT_SCHEME = NAMESPACES['skos'] + "ConceptScheme"
-	static final String SKOS_TOP_CONCEPT = NAMESPACES['sosmv'] + "rootConcept"
+	static final String SKOS_TOP_CONCEPT = NAMESPACES['osn'] + "rootConcept"
 	static final String SKOS_EXACT_MATCH = NAMESPACES['skos'] + "exactMatch"
 	static final String SKOS_REL_MATCH = NAMESPACES['skos'] + "relatedMatch"
 	static final String SKOS_INSCHEME = NAMESPACES['skos'] + "inScheme"
