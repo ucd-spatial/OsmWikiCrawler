@@ -140,6 +140,11 @@ class WikiRdf {
 		return fn
 	}
 	
+	static private String translateOsnUri( String uri ){
+		String osnUri = uri.replace("http://wiki.openstreetmap.org/wiki/",OntoUtils.OSN_RESOURCE)
+		return osnUri
+	}
+	
 	/**
 	 * 
 	 * @param sub
@@ -147,7 +152,7 @@ class WikiRdf {
 	 * @param obj
 	 * @param m
 	 */
-	static private void addStatement( String sub, String pred, String obj, Model m ){
+	static private void addStatement( String sub, String pred, String obj, Model m, Boolean bTranslateObjOsnUri = true ){
 		assert sub
 		assert pred
 		assert obj
@@ -156,6 +161,12 @@ class WikiRdf {
 		sub = sub.replace("=",'%3D').trim() //.decodeURL()
 		pred = pred.trim()
 		obj = obj.replace("=",'%3D').trim()
+		
+		sub = translateOsnUri(sub)
+		if ( bTranslateObjOsnUri ){
+			// only used for sourceUri
+			obj = translateOsnUri(obj)
+		}
 		
 		if ( sub == obj ){
 			// loop, skip it
@@ -304,7 +315,9 @@ class WikiRdf {
 					addStatement( t.uri, OntoUtils.SKOS_INSCHEME, OntoUtils.SKOS_SCHEMA_NAME, m )
 					addStatement( t.uri, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT, m )
 					
-					println("TEST: " + t)
+					if ( t.sourceUri ){
+						addStatement( t.uri, OntoUtils.DC_SOURCE, t.sourceUri, m, false )
+					}
 					
 					if ( t.key ){
 						addStatement( t.uri, OntoUtils.SOSM_KEY_LABEL, t.key, m )
@@ -347,15 +360,11 @@ class WikiRdf {
 						}
 					}
 					
-					if ( t.sourceUri ){
-						addStatement( t.uri, OntoUtils.DC_SOURCE, t.sourceUri, m )
-					}
-					
 					if ( t.photoUris ){
 						def values = t.photoUris.split(' ')*.trim()
 						values.each{
 							String val = it.trim()
-							addStatement( t.uri, OntoUtils.SOSM_PHOTO, val, m )
+							addStatement( t.uri, OntoUtils.SOSM_PHOTO, val, m, false )
 						}
 					}
 					

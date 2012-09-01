@@ -684,6 +684,7 @@ class Crawler {
 	
 	static private OsmOntoTerm newOsmOntoTerm( String sourceUri ){
 		OsmOntoTerm term = new OsmOntoTerm()
+		assert sourceUri
 		term.sourceUri = sourceUri
 		return term
 	}

@@ -66,8 +66,8 @@ class OntoUtils {
 	    rdfsy:"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
 		rdfsc:"http://www.w3.org/2000/01/rdf-schema#",
 		dct:"http://purl.org/dc/terms/",
-		osn:"$OUR_LINKED_DATA_SERVER/osmsemnet/",
-		osnt:"$OUR_LINKED_DATA_SERVER/osmsemnet/terms#",
+		osn:"$OUR_LINKED_DATA_SERVER/2012/08/osmsemnet/",
+		osnt:"$OUR_LINKED_DATA_SERVER/2012/08/osmsemnet/terms#",
 		sosm: SEMOSM_ROOT_URL,
 		sosmv: SEMOSM_ROOT_URL + "wiki/OSMSemanticNetwork#",
 		sosmt: SEMOSM_ROOT_URL+"terms/",
@@ -84,6 +84,7 @@ class OntoUtils {
 	/* RDF predicates used to expand semantics */
 	
 	/** Semantic OSM ontological predicates */
+	static final String OSN_RESOURCE = NAMESPACES['osn']
 	static final String MANUALLY_MAPPED = NAMESPACES['sosmt'] + "manualMapping"
 	static final String SOSM_WIKIPEDIA_LINK = NAMESPACES['osnt'] + "wikipediaLink"
 	static final String SOSM_INTERNAL_LINK = NAMESPACES['osnt'] + "link"
