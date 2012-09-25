@@ -46,6 +46,7 @@ class OntoUtils {
 	/** NAMESPACES */
 	static final String SEMOSM_ROOT_URL = "http://wiki.openstreetmap.org/"
 	static final String OUR_LINKED_DATA_SERVER = "http://spatial.ucd.ie"
+	static final String OSN_ROOT_NAME = "OSMSemanticNetwork"
 	
 	static final def NAMESPACES = [
 	    skos:"http://www.w3.org/2004/02/skos/core#",
@@ -66,10 +67,10 @@ class OntoUtils {
 	    rdfsy:"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
 		rdfsc:"http://www.w3.org/2000/01/rdf-schema#",
 		dct:"http://purl.org/dc/terms/",
-		osn:"$OUR_LINKED_DATA_SERVER/OsmSemNet/",
-		osnp:"$OUR_LINKED_DATA_SERVER/OsmSemNet/property/",
-		osnt:"$OUR_LINKED_DATA_SERVER/OsmSemNet/term/",
-		osnpt:"$OUR_LINKED_DATA_SERVER/OsmSemNet/term/proposed_tag/",
+		osn:"$OUR_LINKED_DATA_SERVER/$OSN_ROOT_NAME/",
+		osnp:"$OUR_LINKED_DATA_SERVER/$OSN_ROOT_NAME/property/",
+		osnt:"$OUR_LINKED_DATA_SERVER/$OSN_ROOT_NAME/term/",
+		osnpt:"$OUR_LINKED_DATA_SERVER/$OSN_ROOT_NAME/proposed_term/",
 		sosm: SEMOSM_ROOT_URL,
 		sosmv: SEMOSM_ROOT_URL + "wiki/OSMSemanticNetwork#",
 		sosmt: SEMOSM_ROOT_URL+"terms/",

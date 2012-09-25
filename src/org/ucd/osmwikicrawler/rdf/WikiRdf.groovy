@@ -399,6 +399,9 @@ class WikiRdf {
 								addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, altLabel, m )
 								altLabel = "(" + t.key + ") " + t.value
 								addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, altLabel, m )
+								
+								altLabel = t.key.replaceAll("_"," ") + ", " + t.value.replaceAll("_"," ")
+								addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, altLabel, m )
 							}
 						}
 					}
