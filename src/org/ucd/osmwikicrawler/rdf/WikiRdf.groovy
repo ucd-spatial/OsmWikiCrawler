@@ -165,10 +165,9 @@ class WikiRdf {
 	 */
 	static private String translateOsnUri( String uri ){
 		//log.info("$uri")
-		String KEY_PREFIX = "key/"
-		String VALUE_PREFIX = "/"
-		String TAG_PREFIX = "tag/"
-		String PROPOSED_PREFIX = "tag/"
+		String KEY_PREFIX = "k:"
+		String VALUE_PREFIX = "/v:"
+		String TAG_PREFIX = "k:"
 		String OPEN_VALUE = "any"
 		String osnUri = uri.replace("http://wiki.openstreetmap.org/wiki/Key:", OntoUtils.NAMESPACES['osnt'] + KEY_PREFIX)
 		osnUri 	   = osnUri.replace("http://wiki.openstreetmap.org/wiki/Tag:", OntoUtils.NAMESPACES['osnt'] + TAG_PREFIX)
@@ -202,9 +201,17 @@ class WikiRdf {
 		obj = obj.replace("=",'%3D').trim()
 		
 		sub = translateOsnUri(sub)
-		if ( bTranslateObjOsnUri ){
-			// only used for sourceUri
-			obj = translateOsnUri(obj)
+		
+		boolean bObjectIsUri = obj =~ /^http:/
+		
+		if (bObjectIsUri){
+			if ( bTranslateObjOsnUri){
+				// only used for sourceUri
+				obj = translateOsnUri(obj)
+			}
+		} else {
+			// to remove % encoding from strings.
+			obj = URLDecoder.decode(obj,"UTF-8")
 		}
 		
 		if ( sub == obj ){
@@ -273,12 +280,10 @@ class WikiRdf {
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/rights", "This material is Open Knowledge. http://opendefinition.org", m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/date", new Date().toString(), m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, OntoUtils.SKOS_PREFLABEL, "OSM Semantic Network", m )
-		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_DEFINITION, "Dummy root concept. It does not carry any meaning.", m )
-		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_PREFLABEL, "root concept", m )
+		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_DEFINITION, "Dummy root term.", m )
+		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_PREFLABEL, "root term", m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT, m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, "http://www.w3.org/2004/02/skos/core#topConceptOf", OntoUtils.SKOS_SCHEMA_NAME, m )
-		
-		
 		
 		// define new properties
 		// TODO
@@ -391,6 +396,8 @@ class WikiRdf {
 								String altLabel = t.key + "=" + t.value
 								addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, altLabel, m )
 								altLabel = t.key + "#" + t.value
+								addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, altLabel, m )
+								altLabel = "(" + t.key + ") " + t.value
 								addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, altLabel, m )
 							}
 						}
@@ -533,7 +540,9 @@ class WikiRdf {
 	
 	static void addSkosDefinitionToUri( String subject, String definition, Model m ){
 		if (statementExists( translateOsnUri(subject), OntoUtils.SKOS_DEFINITION, m)){
-			log.warn("skos:definition for $subject found. Skipping.")
+			String existDef = getSkosDefinitionForUri( subject, m )
+			assert existDef
+			log.debug("skos:definition for $subject found. Skipping.\n exist='$existDef'\n new='$definition'")
 		} else {
 			addStatement( subject, OntoUtils.SKOS_DEFINITION, definition, m, false )
 		}
@@ -731,4 +740,25 @@ class WikiRdf {
 		}
 		return null
 	}
+	
+	/**
+	*
+	* @param uri
+	* @return
+	*/
+   static String getSkosDefinitionForUri( String uri, Model m ){
+	   assert uri
+	   assert m
+	   String transUri = translateOsnUri(uri)
+	   String sparql = "SELECT ?obj { <$transUri> <${OntoUtils.SKOS_DEFINITION}> ?obj }"
+	   log.debug("getOsmWikiDescriptionForUri: sparql=$sparql")
+	   def results = executeSparqlSelectOnModel( sparql, m )
+	   def objects = OntoUtils.getValuesFromJenaResultSet( results, "obj" )
+	   assert objects.size() == 0 || objects.size() == 1
+	   if (objects.size()>0){
+		   assert objects[0]
+		   return objects[0]
+	   }
+	   return null
+   }
 }
