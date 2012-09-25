@@ -136,7 +136,8 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 			"http://wiki.openstreetmap.org/wiki/Tag:landuse%3Dstreet",
 			*/
 			"http://wiki.openstreetmap.org/wiki/Key:landuse",
-			"http://wiki.openstreetmap.org/wiki/Tag:area%3Dyes" ]
+			"http://wiki.openstreetmap.org/wiki/Tag:area%3Dyes",
+			"http://wiki.openstreetmap.org/wiki/Tag:shelter_type%3Dbasic_hut" ]
 		uris.addAll(problematicUris)
 		
 		OsmOntology ontology = new OsmOntology()

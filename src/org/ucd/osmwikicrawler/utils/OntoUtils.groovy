@@ -66,8 +66,10 @@ class OntoUtils {
 	    rdfsy:"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
 		rdfsc:"http://www.w3.org/2000/01/rdf-schema#",
 		dct:"http://purl.org/dc/terms/",
-		osn:"$OUR_LINKED_DATA_SERVER/2012/08/osmsemnet/",
-		osnp:"$OUR_LINKED_DATA_SERVER/2012/08/osmsemnet/prop#",
+		osn:"$OUR_LINKED_DATA_SERVER/OsmSemNet/",
+		osnp:"$OUR_LINKED_DATA_SERVER/OsmSemNet/property/",
+		osnt:"$OUR_LINKED_DATA_SERVER/OsmSemNet/term/",
+		osnpt:"$OUR_LINKED_DATA_SERVER/OsmSemNet/term/proposed_tag/",
 		sosm: SEMOSM_ROOT_URL,
 		sosmv: SEMOSM_ROOT_URL + "wiki/OSMSemanticNetwork#",
 		sosmt: SEMOSM_ROOT_URL+"terms/",
@@ -132,7 +134,7 @@ class OntoUtils {
 	static final String SKOS_SCHEMA_NAME = NAMESPACES['osn'] + "OSMSemanticNetwork"
 	static final String SKOS_BROADER = NAMESPACES['skos'] + "broader"
 	static final String SKOS_CONCEPT_SCHEME = NAMESPACES['skos'] + "ConceptScheme"
-	static final String SKOS_TOP_CONCEPT = NAMESPACES['osn'] + "rootConcept"
+	static final String SKOS_TOP_CONCEPT = NAMESPACES['osnt'] + "rootConcept"
 	static final String SKOS_EXACT_MATCH = NAMESPACES['skos'] + "exactMatch"
 	static final String SKOS_REL_MATCH = NAMESPACES['skos'] + "relatedMatch"
 	static final String SKOS_INSCHEME = NAMESPACES['skos'] + "inScheme"

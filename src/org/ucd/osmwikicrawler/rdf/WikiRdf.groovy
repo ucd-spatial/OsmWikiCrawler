@@ -69,6 +69,7 @@ class WikiRdf {
 		assert ontology
 		Model m = buildJenaModelFromOntology( ontology )
 		assert m
+		
 		// gen NT
 		String fn = getNtFileName( ontology )
 		String content = getNtTextFromModel( m, "N-TRIPLES" )
@@ -124,6 +125,7 @@ class WikiRdf {
 		//}
 		m.setNsPrefix( "osn", OntoUtils.NAMESPACES['osn'] )
 		m.setNsPrefix( "osnp", OntoUtils.NAMESPACES['osnp'] )
+		m.setNsPrefix( "osnt", OntoUtils.NAMESPACES['osnt'] )
 		m.setNsPrefix( "skos", OntoUtils.NAMESPACES['skos'] )
 		//m.setNsPrefix("http://spatial.ucd.ie/2012/08/osmsemnet/terms#","mytest")
 		//log.info(m.getNsURIPrefix("http://spatial.ucd.ie/2012/08/osmsemnet/terms#"))
@@ -156,10 +158,31 @@ class WikiRdf {
 		return fn
 	}
 	
+	/**
+	 * Translate URI to our domain (e.g. http://spatial.ucd.ie/osmsemnet/term/ etc)
+	 * @param uri
+	 * @return
+	 */
 	static private String translateOsnUri( String uri ){
-		String osnUri = uri.replace("http://wiki.openstreetmap.org/wiki/",OntoUtils.OSN_RESOURCE)
+		//log.info("$uri")
+		String KEY_PREFIX = "key/"
+		String VALUE_PREFIX = "/"
+		String TAG_PREFIX = "tag/"
+		String PROPOSED_PREFIX = "tag/"
+		String OPEN_VALUE = "any"
+		String osnUri = uri.replace("http://wiki.openstreetmap.org/wiki/Key:", OntoUtils.NAMESPACES['osnt'] + KEY_PREFIX)
+		osnUri 	   = osnUri.replace("http://wiki.openstreetmap.org/wiki/Tag:", OntoUtils.NAMESPACES['osnt'] + TAG_PREFIX)
+		osnUri 	   = osnUri.replace("http://wiki.openstreetmap.org/wiki/Proposed_Features/", OntoUtils.NAMESPACES['osnpt'] )
+		osnUri 	   = osnUri.replace("http://wiki.openstreetmap.org/wiki/Proposed_features/", OntoUtils.NAMESPACES['osnpt'] )
+		osnUri = osnUri.replaceAll(/%3D$/, VALUE_PREFIX + OPEN_VALUE)
+		osnUri = osnUri.replace("%3D", VALUE_PREFIX)
+		osnUri = osnUri.replace("*", OPEN_VALUE)
+		//osnUri = uri.replace("http://wiki.openstreetmap.org/wiki/",OntoUtils.OSN_RESOURCE)
+		//osnUri = uri.replace("http://wiki.openstreetmap.org/wiki/",OntoUtils.OSN_RESOURCE)
+		//log.info("==> $osnUri")
 		return osnUri
 	}
+
 	
 	/**
 	 * 
@@ -279,21 +302,24 @@ class WikiRdf {
 		addStatement( OntoUtils.SOSM_VALUE_LABEL, OntoUtils.RDF_DEFINEDBY, OntoUtils.SKOS_SCHEMA_NAME, m )
 		addStatement( OntoUtils.SOSM_VALUE_LABEL, OntoUtils.SKOS_DEFINITION, "This concept has the given value", m )
 		// RELATIONSHIPS
-		addStatement( OntoUtils.SOSM_KEY, OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
-		addStatement( OntoUtils.SOSM_KEY, OntoUtils.RDF_LABEL, "has OSM key", m )
-		addStatement( OntoUtils.SOSM_KEY, OntoUtils.RDF_DEFINEDBY, OntoUtils.SKOS_SCHEMA_NAME, m )
-		addStatement( OntoUtils.SOSM_KEY, OntoUtils.SKOS_DEFINITION, "This concept has the given key", m )
-		
-		addStatement( OntoUtils.SOSM_KEY, 			OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
-		addStatement( OntoUtils.SOSM_INTERNAL_LINK, OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
-		addStatement( OntoUtils.SOSM_REDIRECT, 		OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
-		addStatement( OntoUtils.SOSM_WIKIPEDIA_LINK,OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
-		addStatement( OntoUtils.SOSM_PHOTO,			OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
-		addStatement( OntoUtils.SOSM_IMPLIES,		OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
-		addStatement( OntoUtils.SOSM_COMBINATION,	OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
-		addStatement( OntoUtils.SOSM_APPLIES_TO,	OntoUtils.RDF_SUBPROPERTYOF, OntoUtils.SKOS_SEMREL, m )
-		
+
+		addRelationshipDefinition(m,OntoUtils.SOSM_KEY, "key", "This term has the given key",) 
+		addRelationshipDefinition(m,OntoUtils.SOSM_INTERNAL_LINK, "link", "Term refers to target term.")
+		addRelationshipDefinition(m,OntoUtils.SOSM_REDIRECT, "redirect", "The term redirects to target term.")
+		addRelationshipDefinition(m,OntoUtils.SOSM_WIKIPEDIA_LINK, "Wikipedia link", "Term is linked to relevant Wikipedia article.")
+		addRelationshipDefinition(m,OntoUtils.SOSM_PHOTO, "image", "Term is exemplified with target image.")
+		addRelationshipDefinition(m,OntoUtils.SOSM_IMPLIES, "implies", "Subject term implies target term.")
+		addRelationshipDefinition(m,OntoUtils.SOSM_COMBINATION, "implies", "Subject term can be combined with target term.")
+		addRelationshipDefinition(m,OntoUtils.SOSM_APPLIES_TO, "appliesTo", "Subject term is used to describe map features of type node, way or relation.")
+
 		return m
+	}
+
+	static void addRelationshipDefinition(  Model m,  String relUri, String label, String definition){
+		addStatement( relUri, 			OntoUtils.RDF_SUBPROPERTYOF,OntoUtils.SKOS_SEMREL, m )
+		addStatement( relUri, 			OntoUtils.RDF_LABEL, 		label, m )
+		addStatement( relUri, 			OntoUtils.SKOS_DEFINITION, 	definition, m )
+		addStatement( relUri,			OntoUtils.RDF_DEFINEDBY, OntoUtils.SKOS_SCHEMA_NAME, m )
 	}
 	
 	/**
@@ -345,9 +371,10 @@ class WikiRdf {
 						addStatement( t.uri, OntoUtils.SKOS_BROADER, OntoUtils.SKOS_TOP_CONCEPT, m )
 						
 						
+						addSkosPrefLabelToUri( t.uri, t.key, m )
+						
 						String altLabel = "k_" + t.key
-						addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, t.key, m )
-						addSkosPrefLabelToUri( t.uri, altLabel, m )
+						addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, altLabel, m )
 						
 					}
 					
@@ -358,8 +385,8 @@ class WikiRdf {
 							
 							// Skos
 							if (Crawler.isOsmTagPage(t.uri)){
-								String skosLabel = "k_" + t.key + " v_" + t.value
-								addSkosPrefLabelToUri(t.uri,skosLabel, m)
+								String skosLabel = "" + t.key + " = " + t.value
+								addSkosPrefLabelToUri(t.uri, skosLabel, m)
 								
 								String altLabel = t.key + "=" + t.value
 								addStatement( t.uri, OntoUtils.SKOS_ALTLABEL, altLabel, m )
@@ -481,6 +508,8 @@ class WikiRdf {
 		assert prop
 		assert m
 		
+		subject = translateOsnUri(subject)
+		
 		String sel = "ASK { <$subject> <$prop> ?a }"
 		//log.debug(sel)
 		try{
@@ -498,15 +527,15 @@ class WikiRdf {
 		if (statementExists( subject, OntoUtils.SKOS_PREFLABEL, m)){
 			log.warn("prefLabel for $subject found. Skipping.")
 		} else {
-			addStatement( subject, OntoUtils.SKOS_PREFLABEL, label, m )
+			addStatement( subject, OntoUtils.SKOS_PREFLABEL, label, m, false )
 		}
 	}
 	
 	static void addSkosDefinitionToUri( String subject, String definition, Model m ){
-		if (statementExists( subject, OntoUtils.SKOS_DEFINITION, m)){
+		if (statementExists( translateOsnUri(subject), OntoUtils.SKOS_DEFINITION, m)){
 			log.warn("skos:definition for $subject found. Skipping.")
 		} else {
-			addStatement( subject, OntoUtils.SKOS_DEFINITION, definition, m )
+			addStatement( subject, OntoUtils.SKOS_DEFINITION, definition, m, false )
 		}
 	}
 	
