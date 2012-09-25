@@ -67,7 +67,7 @@ class OntoUtils {
 		rdfsc:"http://www.w3.org/2000/01/rdf-schema#",
 		dct:"http://purl.org/dc/terms/",
 		osn:"$OUR_LINKED_DATA_SERVER/2012/08/osmsemnet/",
-		osnt:"$OUR_LINKED_DATA_SERVER/2012/08/osmsemnet/terms#",
+		osnp:"$OUR_LINKED_DATA_SERVER/2012/08/osmsemnet/prop#",
 		sosm: SEMOSM_ROOT_URL,
 		sosmv: SEMOSM_ROOT_URL + "wiki/OSMSemanticNetwork#",
 		sosmt: SEMOSM_ROOT_URL+"terms/",
@@ -86,18 +86,18 @@ class OntoUtils {
 	/** Semantic OSM ontological predicates */
 	static final String OSN_RESOURCE = NAMESPACES['osn']
 	static final String MANUALLY_MAPPED = NAMESPACES['sosmt'] + "manualMapping"
-	static final String SOSM_WIKIPEDIA_LINK = NAMESPACES['osnt'] + "wikipediaLink"
-	static final String SOSM_INTERNAL_LINK = NAMESPACES['osnt'] + "link"
-	static final String SOSM_KEY = NAMESPACES['osnt'] + "key"
-	static final String SOSM_KEY_LABEL = NAMESPACES['osnt'] + "keyLabel"
-	static final String SOSM_VALUE = NAMESPACES['osnt'] + "value"
-	static final String SOSM_VALUE_LABEL = NAMESPACES['osnt'] + "valueLabel"
-	static final String SOSM_PHOTO = NAMESPACES['osnt'] + "image"
-	static final String SOSM_REDIRECT = NAMESPACES['osnt'] + "redirect"
-	static final String SOSM_IMPLIES = NAMESPACES['osnt'] + "implies"
-	static final String SOSM_APPLIES_TO = NAMESPACES['osnt'] + "appliesTo"
-	static final String SOSM_COMBINATION = NAMESPACES['osnt'] + "combinedWith"
-	static final String LGD_MAPPED = NAMESPACES['osnt'] + "lgdMapping"
+	static final String SOSM_WIKIPEDIA_LINK = NAMESPACES['osnp'] + "wikipediaLink"
+	static final String SOSM_INTERNAL_LINK = NAMESPACES['osnp'] + "link"
+	static final String SOSM_KEY = NAMESPACES['osnp'] + "key"
+	static final String SOSM_KEY_LABEL = NAMESPACES['osnp'] + "keyLabel"
+	static final String SOSM_VALUE = NAMESPACES['osnp'] + "value"
+	static final String SOSM_VALUE_LABEL = NAMESPACES['osnp'] + "valueLabel"
+	static final String SOSM_PHOTO = NAMESPACES['osnp'] + "image"
+	static final String SOSM_REDIRECT = NAMESPACES['osnp'] + "redirect"
+	static final String SOSM_IMPLIES = NAMESPACES['osnp'] + "implies"
+	static final String SOSM_APPLIES_TO = NAMESPACES['osnp'] + "appliesTo"
+	static final String SOSM_COMBINATION = NAMESPACES['osnp'] + "combinedWith"
+	static final String LGD_MAPPED = NAMESPACES['osnp'] + "lgdMapping"
 	
 	// obsolete
 	static final String SEMOSM_SCORE_URI = NAMESPACES['sosm'] + "score#"

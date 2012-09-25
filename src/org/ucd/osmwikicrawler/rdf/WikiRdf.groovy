@@ -53,6 +53,7 @@ class WikiRdf {
     static String genNtFromOsmOntology( OsmOntology ontology, Model m ) {
 		assert ontology
 		assert m 
+		
 		String fn = getNtFileName( ontology )
 		String content = getNtTextFromModel( m )
 		Utils.outputFile( content, fn )
@@ -112,6 +113,21 @@ class WikiRdf {
 		String utfStr = new String(bytesArr, "UTF-8")
 		log.info("... Triples were wrote to string. sz=${utfStr.length()}")
 		return utfStr
+	}
+	
+	static private Model setPrefixes( Model m ){
+		log.info(" setting RDF prefixes")
+		//for (e in OntoUtils.NAMESPACES){
+		//	assert e.value
+		//	assert e.key
+		//	m.setNsPrefix( e.key, e.value )
+		//}
+		m.setNsPrefix( "osn", OntoUtils.NAMESPACES['osn'] )
+		m.setNsPrefix( "osnp", OntoUtils.NAMESPACES['osnp'] )
+		m.setNsPrefix( "skos", OntoUtils.NAMESPACES['skos'] )
+		//m.setNsPrefix("http://spatial.ucd.ie/2012/08/osmsemnet/terms#","mytest")
+		//log.info(m.getNsURIPrefix("http://spatial.ucd.ie/2012/08/osmsemnet/terms#"))
+		return m
 	}
 	
 	/**
@@ -572,6 +588,7 @@ class WikiRdf {
 			return osmWikiModel
 		} else {
 			Model m = ModelFactory.createDefaultModel()
+			m = setPrefixes(m)
 			osmWikiModel = m
 		}
 		assert osmWikiModel != null
