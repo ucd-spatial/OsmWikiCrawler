@@ -132,7 +132,7 @@ class OntoUtils {
 	
 	/** SKOS vocabulary */
 	
-	static final String SKOS_SCHEMA_NAME = NAMESPACES['osn'] + "OSMSemanticNetwork"
+	static final String SKOS_SCHEMA_NAME = NAMESPACES['osn'] + "Scheme"
 	static final String SKOS_BROADER = NAMESPACES['skos'] + "broader"
 	static final String SKOS_CONCEPT_SCHEME = NAMESPACES['skos'] + "ConceptScheme"
 	static final String SKOS_TOP_CONCEPT = NAMESPACES['osnt'] + "rootConcept"
