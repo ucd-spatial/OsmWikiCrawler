@@ -210,8 +210,14 @@ class WikiRdf {
 				obj = translateOsnUri(obj)
 			}
 		} else {
+			obj = obj.trim()
+			try {
 			// to remove % encoding from strings.
-			obj = URLDecoder.decode(obj,"UTF-8")
+				String obj2 = URLDecoder.decode(obj,"UTF-8")
+				obj = obj2
+			} catch(java.lang.IllegalArgumentException e){
+				log.warn(e)
+			}
 		}
 		
 		if ( sub == obj ){
