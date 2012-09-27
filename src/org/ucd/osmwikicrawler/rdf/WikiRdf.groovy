@@ -765,7 +765,12 @@ class WikiRdf {
 	   log.debug("getOsmWikiDescriptionForUri: sparql=$sparql")
 	   def results = executeSparqlSelectOnModel( sparql, m )
 	   def objects = OntoUtils.getValuesFromJenaResultSet( results, "obj" )
-	   assert objects.size() == 0 || objects.size() == 1
+	   assert objects.size() == 0 || objects.size() == 1 || objects.size() == 2
+	   
+	   if (objects.size()>1){
+		   log.warn("getSkosDefinitionForUri: URI='$uri' has more than one SKOS definition")
+	   }
+	   
 	   if (objects.size()>0){
 		   assert objects[0]
 		   return objects[0]
