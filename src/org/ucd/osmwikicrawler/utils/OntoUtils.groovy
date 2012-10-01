@@ -40,7 +40,7 @@ import org.ucd.osmwikicrawler.exceptions.RemoteServiceException;
 class OntoUtils {
 	
 	static def log = Logger.getLogger(OntoUtils.class)
-		
+	
 	public enum FileFormat{XML, CSV, HTML}
 	
 	/** NAMESPACES */
@@ -100,6 +100,7 @@ class OntoUtils {
 	static final String SOSM_IMPLIES = NAMESPACES['osnp'] + "implies"
 	static final String SOSM_APPLIES_TO = NAMESPACES['osnp'] + "appliesTo"
 	static final String SOSM_COMBINATION = NAMESPACES['osnp'] + "combinedWith"
+	static final String SOSM_TAGINFO = NAMESPACES['osnp'] + "tagInfo"
 	static final String LGD_MAPPED = NAMESPACES['osnp'] + "lgdMapping"
 	
 	// obsolete
@@ -149,8 +150,8 @@ class OntoUtils {
 	
 	static final def VECTOR_MERGE_MODES = ["skip","sum","max"]
 
-	static final int SPARQL_MAX_RETRIALS = 3
-	static final int SPARQL_RETRIAL_SLEEP_MS = 100
+	static final Integer SPARQL_MAX_RETRIALS = 3
+	static final Integer SPARQL_RETRIAL_SLEEP_MS = 100
 	
 	static final String MAPPING_TABLE_HEADER = '''
 				<th title='Order of retrieval from DBPedia lookup'>u#</th>
@@ -596,11 +597,11 @@ class OntoUtils {
 	 * @param endpoint
 	 * @return
 	 */
-	static public boolean sparqlAskRemote( String askSparql, String endpoint, boolean useCache = true, boolean useDirectUrl = false ){
+	static public Boolean sparqlAskRemote( String askSparql, String endpoint, Boolean useCache = true, Boolean useDirectUrl = false ){
 		assert askSparql
 		assert endpoint
 		assert askSparql.toLowerCase() =~ "ask","sparqlAskRemote invalid query='${askSparql}'"
-		final int QUERY_HTTP_TIMEOUT_MS = 2000
+		Integer QUERY_HTTP_TIMEOUT_MS = 2000
 		log.debug("sparqlAskRemote: endpoint='${endpoint}' query='${askSparql}' useCache=${useCache} useDirectUrl=${useDirectUrl} ")
 		
 		// FIX for specific issues with endpoints
@@ -612,7 +613,7 @@ class OntoUtils {
 		com.hp.hpl.jena.query.QueryExecution qexec = null
 		//ARQ.getContext().setTrue(ARQ.useSAX)
 		//com.hp.hpl.jena.query.Query q = null
-		int trialCounter = 0
+		Integer trialCounter = 0
 		while ( trialCounter < SPARQL_MAX_RETRIALS ){
 			trialCounter++
 			try {
@@ -669,6 +670,7 @@ class OntoUtils {
 				Thread.currentThread().sleep( SPARQL_RETRIAL_SLEEP_MS )
 			}
 		}
+		return false
 	}
 	
 	/**

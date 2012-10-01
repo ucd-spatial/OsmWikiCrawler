@@ -324,6 +324,7 @@ class WikiRdf {
 		addRelationshipDefinition(m,OntoUtils.SOSM_IMPLIES, "implies", "Subject term implies target term.")
 		addRelationshipDefinition(m,OntoUtils.SOSM_COMBINATION, "implies", "Subject term can be combined with target term.")
 		addRelationshipDefinition(m,OntoUtils.SOSM_APPLIES_TO, "appliesTo", "Subject term is used to describe map features of type node, way or relation.")
+		addRelationshipDefinition(m,OntoUtils.SOSM_TAGINFO, "tagInfo", "Subject term has meta-data on TagInfo (taginfo.openstreetmap.org) web service.")
 
 		return m
 	}
@@ -511,6 +512,8 @@ class WikiRdf {
 		
 		m = fixSkosConsistency( m )
 		log.debug("build ${m.size()} statements.")
+		
+		m = TagInfoUtils.matchOsnTermsWithTagInfo( m )
 		return m
 	}
 	
@@ -706,8 +709,8 @@ class WikiRdf {
 		assert sparql
 		assert sparql.toLowerCase().trim() =~ "select","$sparql"
 		log.debug("executeSparqlSelectOnModel: executing sparql=${sparql}")
-		Query query = QueryFactory.create( sparql )
-		QueryExecution qexec = QueryExecutionFactory.create( query, m )
+		//Query query = QueryFactory.create( sparql )
+		com.hp.hpl.jena.query.QueryExecution qexec = com.hp.hpl.jena.query.QueryExecutionFactory.create( sparql, m )
 		ResultSet r = qexec.execSelect()
 		ResultSetRewindable rwRs = ResultSetFactory.makeRewindable( r )
 		qexec.close()

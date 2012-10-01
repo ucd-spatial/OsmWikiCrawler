@@ -317,9 +317,9 @@ class Lgd {
 	 * @param askQuery ASK sparql query on LinkedGeoData
 	 * @return true or false
 	 */
-	static public boolean askLgd( String askQuery ){
+	static public Boolean askLgd( String askQuery ){
 		assert askQuery
-		boolean exists = false
+		Boolean exists = false
 		try {
 			exists = OntoUtils.sparqlAskRemote( askQuery, LGD_SPARQL_SERVICE, true, true )
 		} catch( e ){

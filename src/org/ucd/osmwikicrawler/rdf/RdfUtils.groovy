@@ -21,9 +21,16 @@ package org.ucd.osmwikicrawler.rdf
 
 import java.io.InputStream
 import org.apache.log4j.Logger
+import groovy.json.JsonSlurper
+import org.ucd.osmwikicrawler.crawler.Crawler;
+import org.ucd.osmwikicrawler.ontology.OsmOntology;
+import org.ucd.osmwikicrawler.utils.OntoUtils;
+import org.ucd.osmwikicrawler.utils.Utils;
+
 import com.hp.hpl.jena.query.*
 import com.hp.hpl.jena.db.*
 import com.hp.hpl.jena.rdf.model.*
+import groovy.json.*
 
 /**
  * Utils for the RDF format.
@@ -297,4 +304,6 @@ class RdfUtils {
 		html = html.replaceAll("\n","<br/>")
 		return html
 	}
+	
+	
 }
