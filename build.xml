@@ -65,6 +65,7 @@
     	<java fork="true" classname="org.ucd.osmwikicrawler.RunOsmWikiCrawler" 
     		classpathref="classpath" failonerror="true">
     	    <jvmarg value="-Xmx2048m"/>
+    		<jvmarg value="-Dfile.encoding=UTF8"/>
 	        <classpath>
 	        	<path location="${jar.dir}/${jar.filename}-${version.num}.jar"/>
 	        </classpath>
@@ -75,6 +76,7 @@
 	<target name="test" depends="jar">
 		<java fork="true" classname="org.ucd.osmwikicrawler.test.OsmWikiCrawlerTests" 
 			classpathref="classpath" failonerror="true">
+    		<jvmarg value="-Dfile.encoding=UTF8"/>
 	        <classpath>
 	        	<path location="${jar.dir}/${jar.filename}-${version.num}.jar"/>
 	        </classpath>

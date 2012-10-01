@@ -20,6 +20,8 @@ This file is part of the OSM Wiki Crawler.
 package org.ucd.osmwikicrawler.rdf
 
 import java.io.InputStream
+import java.nio.charset.Charset;
+
 import org.apache.log4j.Logger
 import groovy.json.JsonSlurper
 import org.ucd.osmwikicrawler.crawler.Crawler;
@@ -186,7 +188,7 @@ class TagInfoUtils {
 	   
 	   if (tagInfoUri){
 		   newStm++
-		   WikiRdf.addStatement( uri, OntoUtils.SOSM_TAGINFO, tagInfoUri, m)
+		   WikiRdf.addStatement( uri, OntoUtils.SOSM_TAGINFO, tagInfoUri, m, false )
 	   }
 	   
 	   // multi-values
@@ -195,7 +197,7 @@ class TagInfoUtils {
 			   tagInfoUri = getTagInfoUri( key, value )
 			   if (tagInfoUri){
 				   newStm++
-				   WikiRdf.addStatement( uri, OntoUtils.SOSM_TAGINFO, tagInfoUri, m)
+				   WikiRdf.addStatement( uri, OntoUtils.SOSM_TAGINFO, tagInfoUri, m, false )
 				   addMultilingualInfo( uri, key, value, m )
 			   }
 		   }
@@ -226,6 +228,12 @@ class TagInfoUtils {
 		   
 		   if (entry.description){
 			   WikiRdf.addSkosDefinitionToUri( uri, entry.description, m, entry.lang )
+			   //log.info("====\naddSkosDefinitionToUri $entry.lang = $entry.description")
+			   //System.out.println(entry.description)
+			   
+			   //System.out.println("Charset.defaultCharset()=" + Charset.defaultCharset());
+			   //System.out.println("file.encoding=" + System.getProperty("file.encoding"));
+			   
 		   }
 		   
 		   //log.debug(entry.title)

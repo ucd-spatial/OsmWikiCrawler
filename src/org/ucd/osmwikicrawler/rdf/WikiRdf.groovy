@@ -138,7 +138,8 @@ class WikiRdf {
 		}
 		
 		OutputStream out = new FileOutputStream(file)
-		w.write( m, out, OntoUtils.NAMESPACES['osn'] )
+		w.write( m, out, null ) // OntoUtils.NAMESPACES['osn'] )
+		
 		log.info(" RDF model written to file '$file'.")
 	}
 	
@@ -239,7 +240,7 @@ class WikiRdf {
 			obj = obj.trim()
 			try {
 			// to remove % encoding from strings.
-				String obj2 = URLDecoder.decode(obj,"UTF-8")
+				String obj2 = URLDecoder.decode(obj) //,"UTF-8")
 				obj = obj2
 			} catch(java.lang.IllegalArgumentException e){
 				log.warn(e)

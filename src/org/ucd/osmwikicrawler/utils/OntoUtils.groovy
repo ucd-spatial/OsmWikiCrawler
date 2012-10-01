@@ -45,8 +45,8 @@ class OntoUtils {
 	
 	/** NAMESPACES */
 	static final String SEMOSM_ROOT_URL = "http://wiki.openstreetmap.org/"
-	static final String OUR_LINKED_DATA_SERVER = "http://spatial.ucd.ie"
-	static final String OSN_ROOT_NAME = "OSMSemanticNetwork"
+	static final String OUR_LINKED_DATA_SERVER = "http://spatial.ucd.ie/lod"
+	static final String OSN_ROOT_NAME = "osn"
 	
 	static final def NAMESPACES = [
 	    skos:"http://www.w3.org/2004/02/skos/core#",
@@ -134,7 +134,7 @@ class OntoUtils {
 	
 	/** SKOS vocabulary */
 	
-	static final String SKOS_SCHEMA_NAME = NAMESPACES['osn'] + "Scheme"
+	static final String SKOS_SCHEMA_NAME = NAMESPACES['osn'] + "OSMSemanticNetwork"
 	static final String SKOS_BROADER = NAMESPACES['skos'] + "broader"
 	static final String SKOS_CONCEPT_SCHEME = NAMESPACES['skos'] + "ConceptScheme"
 	static final String SKOS_TOP_CONCEPT = NAMESPACES['osnt'] + "rootConcept"
@@ -728,7 +728,6 @@ class OntoUtils {
 				}
 				
 				assert xmlResults
-
 				InputStream is2 = new ByteArrayInputStream( xmlResults.getBytes("UTF-8") )
 				
 				ResultSet res = ResultSetFactory.fromXML( is2 )
