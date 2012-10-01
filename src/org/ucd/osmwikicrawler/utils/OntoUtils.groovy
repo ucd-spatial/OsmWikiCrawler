@@ -101,6 +101,7 @@ class OntoUtils {
 	static final String SOSM_APPLIES_TO = NAMESPACES['osnp'] + "appliesTo"
 	static final String SOSM_COMBINATION = NAMESPACES['osnp'] + "combinedWith"
 	static final String SOSM_TAGINFO = NAMESPACES['osnp'] + "tagInfo"
+	static final String SOSM_MULTILANGUAGE_ALT = NAMESPACES['osnp'] + "altLanguageSource"
 	static final String LGD_MAPPED = NAMESPACES['osnp'] + "lgdMapping"
 	
 	// obsolete

@@ -74,11 +74,12 @@ class TagInfoUtils {
 			   log.debug("$keys === $values")
 			   
 			   termsFound += addTagInfoStatements( uri, keys, values, m )
+			   
 		   //} catch( RuntimeException e ){
 		   	//   log.warn( "Issue while matchOsnTermsWithTagInfo() on uri=$uri\n" + e )
 		   //}
 	   }
-	   log.info(" Found $termsFound term(s) in taginfo.openstreetmap.org.")
+	   log.info(" Found meta-data in taginfo.openstreetmap.org for $termsFound term(s) out of ${termsUris.size()}.")
 	   return m
    }
    
@@ -176,9 +177,11 @@ class TagInfoUtils {
 	   
 	   if (!v){
 		   tagInfoUri = getTagInfoUri( key, null )
+		   addMultilingualInfo( uri, key, null, m )
 	   }
 	   if (v.size() == 1){
 		   tagInfoUri = getTagInfoUri( key, v[0] )
+		   addMultilingualInfo( uri, key, v[0], m )
 	   }
 	   
 	   if (tagInfoUri){
@@ -193,9 +196,70 @@ class TagInfoUtils {
 			   if (tagInfoUri){
 				   newStm++
 				   WikiRdf.addStatement( uri, OntoUtils.SOSM_TAGINFO, tagInfoUri, m)
+				   addMultilingualInfo( uri, key, value, m )
 			   }
 		   }
 	   }
 	   return newStm
+   }
+   
+   /**
+    * 
+    * @param uri
+    * @param key
+    * @param value
+    * @param m
+    * @return
+    */
+   static def addMultilingualInfo( String uri, String key, String value, Model m ){
+	   assert m
+	   assert key
+	   assert uri
+	   
+	   def json = getMultilingualInfoFromAPI( key, value )
+	   json.each{ entry->
+		   // scan each available language
+		   log.debug(entry.lang)
+		   if (entry.lang=="en") return
+		   
+		   //log.debug(entry.description)
+		   
+		   if (entry.description){
+			   WikiRdf.addSkosDefinitionToUri( uri, entry.description, m, entry.lang )
+		   }
+		   
+		   //log.debug(entry.title)
+		   
+		   if (entry.title){
+			   // add equivalent URI in a different language
+			   String osmWikiUri = "http://wiki.openstreetmap.org/wiki/${entry.title}"
+			   WikiRdf.addStatement(uri, OntoUtils.SOSM_MULTILANGUAGE_ALT, osmWikiUri, m, false)
+			   //WikiRdf.addStatement(uri, OntoUtils.PRED_SAME_AS, osmWikiUri, m, false)
+		   }
+	   }
+	   
+	   return null
+   }
+   
+   /**
+    * 
+	   // KEY url: http://taginfo.openstreetmap.org/api/2/wiki/keys?key=amenity
+	   // VALUE url: http://taginfo.openstreetmap.org/api/2/wiki/tags?key=amenity&value=restaurant
+	   
+    * @param key
+    * @return
+    */
+   static def getMultilingualInfoFromAPI( String key, String value = null ){
+	   if (!value){
+		   // KEY
+		   String url = "http://taginfo.openstreetmap.org/api/2/wiki/keys?key=$key"
+		   def json = getJsonFromUri(url)
+		   return json
+	   } else {
+	   		// KEY + VALUE
+	   		String url = "http://taginfo.openstreetmap.org/api/2/wiki/tags?key=${key}&value=${value}"
+			def json = getJsonFromUri(url)
+			return json
+	   }
    }
 }

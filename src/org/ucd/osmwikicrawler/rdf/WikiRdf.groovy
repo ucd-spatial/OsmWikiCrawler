@@ -51,6 +51,7 @@ class WikiRdf {
 	 * @return fileName
 	 */
     static String genNtFromOsmOntology( OsmOntology ontology, Model m ) {
+		assert false
 		assert ontology
 		assert m 
 		
@@ -71,15 +72,19 @@ class WikiRdf {
 		assert m
 		
 		// gen NT
-		String fn = getNtFileName( ontology )
-		String content = getNtTextFromModel( m, "N-TRIPLES" )
-		Utils.outputFile( content, fn )
-		// gen RDF
-		fn = getRdfFileName( ontology )
-		content = getNtTextFromModel( m, "RDF/XML" )
-		content = '<?xml version="1.0" encoding="UTF-8"?>\n' + content
-		Utils.outputFile( content, fn )
+		String fn = getNtFileName( ontology, "rdf" )
+		writeModelToFile( m, fn, "RDF/XML" )
 		
+		fn = getNtFileName( ontology, "nt" )
+		writeModelToFile( m, fn, "N-TRIPLES" )
+		//String content = getNtTextFromModel( m, "N-TRIPLES" )
+		//content = '<?xml version="1.0" encoding="UTF-8"?>\n' + content
+		//Utils.outputFile( content, fn )
+		// gen RDF
+		//fn = getRdfFileName( ontology )
+		//content = getNtTextFromModel( m, "RDF/XML" )
+		//content = '<?xml version="1.0" encoding="UTF-8"?>\n' + content
+		//Utils.outputFile( content, fn )
 	}
 	
 	/**
@@ -98,7 +103,7 @@ class WikiRdf {
    }
 	
 	/**
-	 * 
+	 * BUGGY
 	 * @param m
 	 * @return UTF
 	 */
@@ -114,6 +119,27 @@ class WikiRdf {
 		String utfStr = new String(bytesArr, "UTF-8")
 		log.info("... Triples were wrote to string. sz=${utfStr.length()}")
 		return utfStr
+	}
+	
+	/**
+	 * 
+	 * @param m
+	 * @param file
+	 */
+	static private void writeModelToFile( Model m, String file, String format ){
+		assert m
+		assert file
+		assert format
+		RDFWriter w = m.getWriter( format )
+		assert w
+		
+		if (format =~ "RDF"){
+			w.setProperty("showXmlDeclaration","true")
+		}
+		
+		OutputStream out = new FileOutputStream(file)
+		w.write( m, out, OntoUtils.NAMESPACES['osn'] )
+		log.info(" RDF model written to file '$file'.")
 	}
 	
 	static private Model setPrefixes( Model m ){
@@ -137,11 +163,11 @@ class WikiRdf {
 	 * @param ontology
 	 * @return
 	 */
-	static private String getNtFileName( OsmOntology ontology ){
+	static private String getNtFileName( OsmOntology ontology, String ext ){
 		assert ontology
 		assert ontology.creationDate
 		String timeStr = String.format( '%tF', ontology.creationDate )
-		String fn = Utils.getSemantiNetworkOutputFolder() + OSM_WIKI_NT_FILE_PREFIX + "-${timeStr}.nt"
+		String fn = Utils.getSemantiNetworkOutputFolder() + OSM_WIKI_NT_FILE_PREFIX + "-${timeStr}.$ext"
 		return fn
 	}
 	
@@ -190,7 +216,7 @@ class WikiRdf {
 	 * @param obj
 	 * @param m
 	 */
-	static private void addStatement( String sub, String pred, String obj, Model m, Boolean bTranslateObjOsnUri = true ){
+	static public void addStatement( String sub, String pred, String obj, Model m, Boolean bTranslateObjOsnUri = true, String lang = "en" ){
 		assert sub
 		assert pred
 		assert obj
@@ -244,7 +270,7 @@ class WikiRdf {
 			String str = clearStringForLiteral( obj )
 			if (!str) return
 			// text. add language
-			o = m.createLiteral( clearStringForLiteral( str ), RDF_LANG )
+			o = m.createLiteral( clearStringForLiteral( str ), lang )
 		}
 		Statement statement = m.createStatement( s, p, o )
 		m.add( statement )
@@ -325,7 +351,8 @@ class WikiRdf {
 		addRelationshipDefinition(m,OntoUtils.SOSM_COMBINATION, "implies", "Subject term can be combined with target term.")
 		addRelationshipDefinition(m,OntoUtils.SOSM_APPLIES_TO, "appliesTo", "Subject term is used to describe map features of type node, way or relation.")
 		addRelationshipDefinition(m,OntoUtils.SOSM_TAGINFO, "tagInfo", "Subject term has meta-data on TagInfo (taginfo.openstreetmap.org) web service.")
-
+		addRelationshipDefinition(m,OntoUtils.SOSM_MULTILANGUAGE_ALT, "altLanguageSource", "Subject term has page in OSM Wiki in a language other than English.")
+		
 		return m
 	}
 
@@ -524,7 +551,7 @@ class WikiRdf {
 	 * @param m
 	 * @return
 	 */
-	static boolean statementExists( String subject, String prop, Model m ){
+	static boolean statementExists( String subject, String prop, Model m, String lang = null ){
 		assert subject
 		assert prop
 		assert m
@@ -532,6 +559,10 @@ class WikiRdf {
 		subject = translateOsnUri(subject)
 		
 		String sel = "ASK { <$subject> <$prop> ?a }"
+		
+		if (lang){
+			sel = "ASK { <$subject> <$prop> ?a  FILTER ( lang(?a) = \"${lang}\" ) }"
+		}
 		//log.debug(sel)
 		try{
 			boolean b = executeSparqlAskOnModel( sel, m )
@@ -552,13 +583,19 @@ class WikiRdf {
 		}
 	}
 	
-	static void addSkosDefinitionToUri( String subject, String definition, Model m ){
-		if (statementExists( translateOsnUri(subject), OntoUtils.SKOS_DEFINITION, m)){
+	/**
+	 * 
+	 * @param subject
+	 * @param definition
+	 * @param m
+	 */
+	static void addSkosDefinitionToUri( String subject, String definition, Model m, String lang = "en" ){
+		if (statementExists( translateOsnUri(subject), OntoUtils.SKOS_DEFINITION, m, lang)){
 			String existDef = getSkosDefinitionForUri( subject, m )
 			assert existDef
 			log.debug("skos:definition for $subject found. Skipping.\n exist='$existDef'\n new='$definition'")
 		} else {
-			addStatement( subject, OntoUtils.SKOS_DEFINITION, definition, m, false )
+			addStatement( subject, OntoUtils.SKOS_DEFINITION, definition, m, false, lang )
 		}
 	}
 	
@@ -760,18 +797,18 @@ class WikiRdf {
 	* @param uri
 	* @return
 	*/
-   static String getSkosDefinitionForUri( String uri, Model m ){
+   static String getSkosDefinitionForUri( String uri, Model m, String lang = "en" ){
 	   assert uri
 	   assert m
 	   String transUri = translateOsnUri(uri)
-	   String sparql = "SELECT ?obj { <$transUri> <${OntoUtils.SKOS_DEFINITION}> ?obj }"
+	   String sparql = "SELECT ?obj { <$transUri> <${OntoUtils.SKOS_DEFINITION}> ?obj FILTER ( lang(?obj) = \"${lang}\" ) }"
 	   log.debug("getOsmWikiDescriptionForUri: sparql=$sparql")
 	   def results = executeSparqlSelectOnModel( sparql, m )
 	   def objects = OntoUtils.getValuesFromJenaResultSet( results, "obj" )
 	   assert objects.size() == 0 || objects.size() == 1 || objects.size() == 2
 	   
 	   if (objects.size()>1){
-		   log.warn("getSkosDefinitionForUri: URI='$uri' has more than one SKOS definition")
+		   log.warn("getSkosDefinitionForUri: URI='$uri' has more than one SKOS definition for lang=$lang")
 	   }
 	   
 	   if (objects.size()>0){
