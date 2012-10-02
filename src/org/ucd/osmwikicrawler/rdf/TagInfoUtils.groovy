@@ -123,6 +123,8 @@ class TagInfoUtils {
    static def getJsonFromUri( String uri ){
 	   assert uri
 	   String callRes = Utils.downloadURL(uri, 5)
+	   if (!callRes || callRes == "null") return null
+	   
 	   def json = new JsonSlurper().parseText(callRes)
 	   return json
    }
@@ -149,11 +151,15 @@ class TagInfoUtils {
 	   if (!value){
 		   def json = queryTagInfoKey( key )
 		   //log.info("json.total="+ json.total)
-		   if (json.total > 0) valid = true
+		   if (json){
+			   if (json.total > 0) valid = true
+		   }
 	   } else {
 	   		assert value
 			def json = queryTagInfoKeyValue(key, value)
-			if (json.all.count > 0) valid = true
+			if (json){
+				if (json.all.count > 0) valid = true
+			}
 			
 	   }
 	   log.debug("validKeyValueOnTagInfo $key=$value => $valid")
