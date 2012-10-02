@@ -62,11 +62,14 @@ class TagInfoUtils {
 	   def termsUris = OntoUtils.getValuesFromJenaResultSet( allConcs, "c" )
 	   //log.info(termsUris)
 	   
+	   int invalidTerms = 0
+	   
 	   termsUris.each{ uri->
 		   //uri = Crawler.truncateUriFromLocalLink(uri)
 		   log.debug("matchOsnTermsWithTagInfo: "+uri)
 		    
-		   //try {
+		   try {
+		   
 			   def rk = WikiRdf.executeSparqlSelectOnModel( "select ?k where { <$uri> <${OntoUtils.SOSM_KEY_LABEL}> ?k . } ", m )
 			   def keys = OntoUtils.getValuesFromJenaResultSet( rk, "k" )
 			   
@@ -77,11 +80,12 @@ class TagInfoUtils {
 			   
 			   termsFound += addTagInfoStatements( uri, keys, values, m )
 			   
-		   //} catch( RuntimeException e ){
-		   	//   log.warn( "Issue while matchOsnTermsWithTagInfo() on uri=$uri\n" + e )
-		   //}
+		   } catch( QueryParseException e ){
+		   		log.debug( "Issue while matchOsnTermsWithTagInfo() on uri=$uri - skipping... \n" + e )
+				invalidTerms++
+		   }
 	   }
-	   log.info(" Found meta-data in taginfo.openstreetmap.org for $termsFound term(s) out of ${termsUris.size()}.")
+	   log.info(" Found meta-data in taginfo.openstreetmap.org for $termsFound term(s) out of ${termsUris.size()} ($invalidTerms invalid terms).")
 	   return m
    }
    
