@@ -592,7 +592,7 @@ class WikiRdf {
 	 */
 	static void addSkosDefinitionToUri( String subject, String definition, Model m, String lang = "en" ){
 		if (statementExists( translateOsnUri(subject), OntoUtils.SKOS_DEFINITION, m, lang)){
-			String existDef = getSkosDefinitionForUri( subject, m )
+			String existDef = getSkosDefinitionForUri( subject, m, lang )
 			assert existDef
 			log.debug("skos:definition for $subject found. Skipping.\n exist='$existDef'\n new='$definition'")
 		} else {
