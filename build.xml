@@ -72,6 +72,18 @@
     	</java>
     </target>
 	
+	<!-- MAPPING OSM with LOD datasets -->
+    <target name="maplod" depends="jar">
+    	<java fork="true" classname="org.ucd.osmwikicrawler.RunMappingOsnToLod" 
+    		classpathref="classpath" failonerror="true">
+    	    <jvmarg value="-Xmx2048m"/>
+    		<jvmarg value="-Dfile.encoding=UTF8"/>
+	        <classpath>
+	        	<path location="${jar.dir}/${jar.filename}-${version.num}.jar"/>
+	        </classpath>
+    	</java>
+    </target>
+	
 	<!-- UNIT TESTS -->
 	<target name="test" depends="jar">
 		<java fork="true" classname="org.ucd.osmwikicrawler.test.OsmWikiCrawlerTests" 
