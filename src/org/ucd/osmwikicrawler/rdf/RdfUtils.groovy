@@ -40,7 +40,7 @@ import groovy.json.*
  */
 class RdfUtils {
 	
-	private IDBConnection jenaConnection = null
+	//private IDBConnection jenaConnection = null
 	private ModelMaker maker = null
 	private Model globalModel = null
 	private Model metaModel = null
@@ -159,7 +159,7 @@ class RdfUtils {
 	 * 
 	 * @return connection to local Jena db 
 	 */
-	private IDBConnection getJenaConnection(){
+	/* private IDBConnection getJenaConnection(){
 		if (jenaConnection){
 			return jenaConnection
 		}
@@ -184,7 +184,7 @@ class RdfUtils {
 		log.debug("Jena connection opened: ${M_DB_URL} -"+jenaConnection.toString())
 		return jenaConnection
 	}
-	
+	*/
 	
 	/**
 	 * @return Rdf Model containing manual mappings

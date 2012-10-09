@@ -22,6 +22,7 @@ package org.ucd.osmwikicrawler
 import org.apache.log4j.Logger
 import org.apache.log4j.PropertyConfigurator
 import org.ucd.osmwikicrawler.crawler.Crawler
+import org.ucd.osmwikicrawler.lod.LodMappingTools;
 import org.ucd.osmwikicrawler.ontology.Lgd
 import org.ucd.osmwikicrawler.ontology.OsmOntology
 import org.ucd.osmwikicrawler.rdf.*
@@ -39,6 +40,17 @@ class RunMappingOsnToLod {
 	
 	private static void mapOsnWithLodDatasets( boolean wordnet = false, boolean dbpedia = false ){
 		// launch mapping process
+		def allConc = LodMappingTools.getAllOsnConcepts()
+		
+		// init mapping RDF model
+		def mappingM = LodMappingTools.createMappingRdfModel()
+		
+		// process all concepts
+		allConc.each{uri->
+			LodMappingTools.processOsnUri( uri, mappingM )
+		}
+		
+		// model contains mapping
 		
 	}
 	
@@ -48,7 +60,7 @@ class RunMappingOsnToLod {
 		log.info "\n**** OsmWikiCrawler ****\n"
 		
 		
-		
+		mapOsnWithLodDatasets( true, true )
 		
 		log.info "*** Mapping the OSM Semantic Network to other datasets ***"
 		
