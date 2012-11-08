@@ -19,6 +19,10 @@ This file is part of the OSM Wiki Crawler.
 */
 package org.ucd.osmwikicrawler.lod
 
+import javax.sound.midi.MidiDevice.Info;
+
+import net.ricecode.similarity.JaroWinklerStrategy;
+
 import org.apache.log4j.Logger
 import org.ucd.osmwikicrawler.rdf.WikiRdf
 import org.ucd.osmwikicrawler.utils.OntoUtils
@@ -41,16 +45,24 @@ class LodMappingTools {
 	
 	static String _OSN_SPARQL_ENDPOINT = "http://spatial.ucd.ie/lod/sparql"
 	static String _DBP_SPARQL_ENDPOINT = "http://dbpedia.org/sparql"
+	static def _OSN_STOP_WORDS = ["yes","no","optional","any","*","ref","de","type"]
+	
+	static Double _SIMILARITY_TH = 0.98
 	
 	static def getAllOsnConcepts(){
 		log.info("Getting all concepts from OSN via SPARQL...")
 		String q = "select ?c { ?c a <${OntoUtils.SKOS_CONCEPT}> }"
 		
-		q += " LIMIT 5"
+		q += " LIMIT 150"
 		def conceptsUris = queryRemoteSparql(q, _OSN_SPARQL_ENDPOINT, "c")
+		
 		log.debug conceptsUris
 		assert conceptsUris.size() > 0
 		return conceptsUris
+	}
+	
+	static boolean isAStopWord( String w ){
+		return w in _OSN_STOP_WORDS
 	}
 	
 	static Model createMappingRdfModel(){
@@ -79,17 +91,17 @@ class LodMappingTools {
 			def fields = OntoUtils.getValuesFromJenaResultSet(rwRss, field)
 			return fields
 		} catch ( com.hp.hpl.jena.query.QueryParseException e ){
-			log.error "error in '$query'"
+			log.warn "error in '$query'"
 			log.warn e
-			return null
+			return []
 		} 
 	}
 	
 	static def getOsnKey( String uri ){
 		String q = "select ?k { <$uri> <$OntoUtils.SOSM_KEY_LABEL> ?k }"
 		def keys = queryRemoteSparql(q, _OSN_SPARQL_ENDPOINT, "k")
-		assert keys.size() == 1 | keys.size() == 0
-		if (keys.size()==1) return keys[0]
+		assert keys.size() == 1 || keys.size() == 0 || keys.size() == 2
+		if (keys.size()>0) return keys[0]
 		return null
 	}
 	
@@ -123,24 +135,74 @@ class LodMappingTools {
 		
 	}
 	
-	static def findDbpediaOntoTerms( String search ){
-		assert search
+	static String cleanStr( String s ){
+		s = s.replaceAll("_"," ")
+		s = s.replaceAll(":"," ")
+		s = s.replaceAll("-"," ")
+		return s
+	}
+	
+	static String collapseString( String s ){
+		s = s.replaceAll("_","")
+		s = s.replaceAll(" ","")
+		return s
+	}
+	
+	/**
+	 * 
+	 * @param search
+	 * @return
+	 */
+	static def findDbpediaOntoTerms( String search, boolean collapseStr = false ){
+		if (isAStopWord(search)) return []
+		if (!search || search.length() < 2) return []
 		if (search.length() > 100){
 			log.warn "invalid key for dbdpia search $search"
-			return null
+			return []
 		}
+		assert search
 		log.info "findDbpediaOntoTerms '$search'"
+		
+		if (collapseStr) collapseString(search)
+		search = cleanStr(search)
+		boolean multiWords = search.split(" ").size() > 1
+		
 		String q = "select distinct ?s from <http://dbpedia.org> where { ?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> FILTER ( regex(?s, \"${search}\",\"i\") ) }"
 		log.debug q
 		def uris = queryRemoteSparql(q, _DBP_SPARQL_ENDPOINT, "s")
+		
+		if (!uris || uris.isEmpty()){
+			if (multiWords){
+				def multiUris = []
+				log.debug "\thandle multiwords = $search"
+				search.split(" ").each{
+					def dbpTerms = findDbpediaOntoTerms( it )
+					multiUris.addAll(dbpTerms)
+				}
+				return multiUris
+			}
+		}
 		return uris
 	}
 	
-	static def getLabelForDBpediaUri( String uri, String lang = "en"){
+	static String getLabelForDBpediaUri( String uri, String lang = "en"){
 		String q = "select distinct ?l from <http://dbpedia.org> where { <$uri> <http://www.w3.org/2000/01/rdf-schema#label> ?l FILTER ( lang(?l) = \"$lang\" ) }"
 		log.debug q
 		def labels = queryRemoteSparql(q, _DBP_SPARQL_ENDPOINT, "l")
-		return labels
+		if (labels.size() > 0) return labels[0]
+		return null
+	}
+	
+	static def findAllDbpediaOntoTerms( String key, def vals, boolean collapseStr ){
+		
+		def dbpOntoUris = findDbpediaOntoTerms( key, collapseStr)
+		vals.each{
+			def dbpOntoUrisV = findDbpediaOntoTerms(it, collapseStr)
+			if (dbpOntoUrisV)
+				dbpOntoUris.addAll(dbpOntoUrisV)
+		}
+		
+		return dbpOntoUris
 	}
 	
 	/**
@@ -160,21 +222,105 @@ class LodMappingTools {
 		String d = getOsnDefinition(uri)
 		log.info "d = $d"
 		
-		
-		def dbpOntoUris = findDbpediaOntoTerms(k)
-		vals.each{
-			def dbpOntoUrisV = findDbpediaOntoTerms(it)
-			if (dbpOntoUrisV)
-				dbpOntoUris.addAll(dbpOntoUrisV)
-		}
+		boolean collapseStr = false
+		def dbpOntoUris = findAllDbpediaOntoTerms( k, vals, collapseStr )
+		collapseStr = true
+		dbpOntoUris.addAll( findAllDbpediaOntoTerms( k, vals, collapseStr ) )
 		
 		log.debug "dbpOntoUris = $dbpOntoUris"
-		dbpOntoUris.each{ uri2->
-			log.info("\t" + uri2 + " -> " + getLabelForDBpediaUri( uri2 ))
+		log.info("TARGET: $uri")
+		dbpOntoUris.unique().each{ uri2->
+			assert uri2
+			def dbpL = getLabelForDBpediaUri( uri2 )
+			
+			String osnStr = "$k ${vals.join(' ')}"
+			def simAB = getStringSimilarityAsymm( osnStr, dbpL )
+			def simBA = getStringSimilarityAsymm( dbpL, osnStr )
+			
+			if (!simAB || !simBA) return
+			
+			if (simAB >= _SIMILARITY_TH){
+				if (simBA <= _SIMILARITY_TH){
+					// detected partial match
+					log.info("Found rel match: $uri === $uri2")
+					addRdfStatement( uri, OntoUtils.SKOS_REL_MATCH, uri2, m)
+				}
+			}
+			
+			log.info("\t ==> " + uri2 + " simAB=" + simAB.round(2) + " simBA=" + simBA.round(2))
 		}
 		
 		// find related resources on DBpedia
 		
 	}
 	
+	static void addRdfStatement(String sub, String pred, String obj, Model m ){
+		Resource s = m.createResource( sub )
+		Property p = m.createProperty( pred )
+		def o = m.createResource( obj )
+		Statement statement = m.createStatement( s, p, o )
+		m.add( statement )
+	}
+	
+	/**
+	 * 
+	 * @param base OSN uri
+	 * @param target any other string (DBPedia, etc)
+	 * @return
+	 */
+	static Double getStringSimilarityAsymm( String base, String target ){
+		def wordsB = cleanStr(base).split(" ")
+		//def wordsT = target.split(" ")
+		
+		Double maxSim = 0
+		String curMax = null
+		wordsB.each{wb->
+			def s = getStringSimilarity( wb, target, false, true )
+			log.info("\t\tgetStringSimilarityAsymm: '$wb' '$target' = ${s}")
+			if (s>maxSim){
+				maxSim = s
+			}
+			//sims.add(maxSim)
+		}
+		log.debug("getStringSimilarityAsymm: max=${maxSim.round(3)}")
+		return maxSim
+	}
+	
+	/**
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	static Double getStringSimilarity( String a, String b, boolean splitWords = false, boolean fuzzyMatch = true ){
+		if (!a || !b) return null
+		assert a
+		assert b
+		
+		if (!fuzzyMatch){
+			if (a.toLowerCase() == b.toLowerCase()) return 1.0
+			else return 0.0
+		}
+		
+		def simEngine = new JaroWinklerStrategy()
+		
+		if (splitWords){
+			def sims = []
+			def wordsA = a.split(" ")
+			def wordsB = b.split(" ")
+			wordsA.each{wa->
+				wordsB.each{wb->
+					def s = simEngine.score(wa,wb)
+					sims.add(s)
+				}
+			}
+			def mean = sims.sum()/sims.size()
+			log.debug("similarity '$a' '$b' mean = $mean")
+			return mean
+		} else {
+			def s = simEngine.score(a,b)
+			log.debug("similarity '$a' '$b' = $s")
+			return s
+		}
+	}
 }

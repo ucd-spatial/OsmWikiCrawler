@@ -24,5 +24,6 @@
 	<classpathentry kind="lib" path="lib/jena-iri-0.9.3.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.6.4.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl-2.10.0.jar"/>
+	<classpathentry kind="lib" path="lib/string-similarity-1.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

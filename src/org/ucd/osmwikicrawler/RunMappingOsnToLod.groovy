@@ -50,7 +50,13 @@ class RunMappingOsnToLod {
 			LodMappingTools.processOsnUri( uri, mappingM )
 		}
 		
-		// model contains mapping
+		// model contains mapping, write it out
+		String timeStr = String.format( '%tF', new Date() )
+		String fn = Utils.getSemantiNetworkOutputFolder() + "OSN-lod_mapping-${timeStr}.rdf"
+		
+		
+		WikiRdf.writeModelToFile( mappingM, fn, "RDF/XML" )
+		
 		
 	}
 	

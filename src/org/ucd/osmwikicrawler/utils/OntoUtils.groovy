@@ -139,6 +139,7 @@ class OntoUtils {
 	static final String SKOS_CONCEPT_SCHEME = NAMESPACES['skos'] + "ConceptScheme"
 	static final String SKOS_TOP_CONCEPT = NAMESPACES['osnt'] + "rootConcept"
 	static final String SKOS_EXACT_MATCH = NAMESPACES['skos'] + "exactMatch"
+	static final String SKOS_CLOSE_MATCH = NAMESPACES['skos'] + "closeMatch"
 	static final String SKOS_REL_MATCH = NAMESPACES['skos'] + "relatedMatch"
 	static final String SKOS_INSCHEME = NAMESPACES['skos'] + "inScheme"
 	static final String SKOS_NARROWER = NAMESPACES['skos'] + "narrower"

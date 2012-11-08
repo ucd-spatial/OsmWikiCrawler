@@ -529,7 +529,7 @@ class WikiRdf {
 					
 					// LGD link
 					if ( t.lgdUri ){
-						//addStatement( t.uri, OntoUtils.PRED_EQUIVALENT_CLASS, t.lgdUri, m )
+						addStatement( t.uri, OntoUtils.PRED_SAME_AS, t.lgdUri, m )
 						addStatement( t.uri, OntoUtils.SKOS_EXACT_MATCH, t.lgdUri, m )
 					}
 					
