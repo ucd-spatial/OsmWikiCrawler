@@ -395,6 +395,7 @@ class Crawler {
 			return newDesc
 		}
 		
+		log.info("mergeDescriptions: '$desc' '$newDesc'")
 		// different text. chain.
 		String nd = "$desc. $newDesc."
 		nd = nd.replaceAll("\\.\\.",'.')
