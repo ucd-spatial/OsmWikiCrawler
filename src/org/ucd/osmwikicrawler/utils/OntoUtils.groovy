@@ -71,6 +71,7 @@ class OntoUtils {
 		osnp:"$OUR_LINKED_DATA_SERVER/$OSN_ROOT_NAME/property/",
 		osnt:"$OUR_LINKED_DATA_SERVER/$OSN_ROOT_NAME/term/",
 		osnpt:"$OUR_LINKED_DATA_SERVER/$OSN_ROOT_NAME/proposed_term/",
+		osnpr:"$OUR_LINKED_DATA_SERVER/$OSN_ROOT_NAME/proposed_relation/",
 		sosm: SEMOSM_ROOT_URL,
 		sosmv: SEMOSM_ROOT_URL + "wiki/OSMSemanticNetwork#",
 		sosmt: SEMOSM_ROOT_URL+"terms/",

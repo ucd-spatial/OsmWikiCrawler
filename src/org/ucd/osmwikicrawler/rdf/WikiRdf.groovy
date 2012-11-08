@@ -200,6 +200,7 @@ class WikiRdf {
 		osnUri 	   = osnUri.replace("http://wiki.openstreetmap.org/wiki/Tag:", OntoUtils.NAMESPACES['osnt'] + TAG_PREFIX)
 		osnUri 	   = osnUri.replace("http://wiki.openstreetmap.org/wiki/Proposed_Features/", OntoUtils.NAMESPACES['osnpt'] )
 		osnUri 	   = osnUri.replace("http://wiki.openstreetmap.org/wiki/Proposed_features/", OntoUtils.NAMESPACES['osnpt'] )
+		osnUri 	   = osnUri.replace("http://wiki.openstreetmap.org/wiki/Relations/Proposed/", OntoUtils.NAMESPACES['osnpr'] )
 		osnUri = osnUri.replaceAll(/%3D$/, VALUE_PREFIX + OPEN_VALUE)
 		osnUri = osnUri.replace("%3D", VALUE_PREFIX)
 		osnUri = osnUri.replace("*", OPEN_VALUE)
@@ -463,7 +464,7 @@ class WikiRdf {
 						def keyUris = t.wikiKeyUris.split(' ')*.trim()
 						keyUris.each{
 							assert it.trim()
-							assert Crawler.isOsmKeyPage( it.trim() )
+							assert Crawler.isOsmKeyPage( it.trim() ) || Crawler.isPropOsmKeyPage( it.trim() )
 							Utils.validateUrl( it.trim() )
 							addStatement( t.uri, OntoUtils.SOSM_KEY, it.trim(), m )
 							// Skos

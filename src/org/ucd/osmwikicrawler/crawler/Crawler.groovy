@@ -916,6 +916,17 @@ class Crawler {
 			return false
 		}
 		boolean b = uri.toLowerCase() =~ OSM_KEY_BASE_URL.toLowerCase()
+		//if (!b) b = uri.toLowerCase() =~ /key:/
+		//log.debug("isOsmKeyPage $uri $b")
+		return b
+	}
+	
+	static private boolean isPropOsmKeyPage( String uri ){
+		if (!isOsmWikiUrl(uri)){
+			return false
+		}
+		boolean b = uri.toLowerCase() =~ /features\/key:/
+		//if (!b) b = uri.toLowerCase() =~ /key:/
 		//log.debug("isOsmKeyPage $uri $b")
 		return b
 	}
