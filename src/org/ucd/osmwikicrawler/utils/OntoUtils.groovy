@@ -91,7 +91,7 @@ class OntoUtils {
 	static final String OSN_RESOURCE = NAMESPACES['osn']
 	static final String MANUALLY_MAPPED = NAMESPACES['sosmt'] + "manualMapping"
 	static final String SOSM_WIKIPEDIA_LINK = NAMESPACES['osnp'] + "wikipediaLink"
-	static final String SOSM_INTERNAL_LINK = NAMESPACES['osnp'] + "link"
+	static final String SOSM_INTERNAL_LINK = NAMESPACES['osnp'] + "linkedTo"
 	static final String SOSM_KEY = NAMESPACES['osnp'] + "key"
 	static final String SOSM_KEY_LABEL = NAMESPACES['osnp'] + "keyLabel"
 	static final String SOSM_VALUE = NAMESPACES['osnp'] + "value"

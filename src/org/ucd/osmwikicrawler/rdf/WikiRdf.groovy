@@ -321,14 +321,14 @@ class WikiRdf {
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, "http://www.w3.org/2004/02/skos/core#topConceptOf", OntoUtils.SKOS_SCHEMA_NAME, m )
 		
 		// related things
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://wiki.openstreetmap.org/wiki/OSM_Semantic_Network", m )
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://github.com/ucd-spatial/OsmWikiCrawler", m )
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://github.com/ucd-spatial/OsmSemanticNetwork", m )
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://dbpedia.org/resource/Openstreetmap", m )
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://dbpedia.org/resource/Volunteered_Geographic_Information", m )
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://dbpedia.org/resource/Geoweb", m )
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://linkedgeodata.org", m )
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://dbpedia.org/resource/Semantic_network", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/2000/01/rdf-schema#seeAlso", "http://wiki.openstreetmap.org/wiki/OSM_Semantic_Network", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/2000/01/rdf-schema#seeAlso", "http://github.com/ucd-spatial/OsmWikiCrawler", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/2000/01/rdf-schema#seeAlso", "http://github.com/ucd-spatial/OsmSemanticNetwork", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/2000/01/rdf-schema#seeAlso", "http://dbpedia.org/resource/Openstreetmap", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/2000/01/rdf-schema#seeAlso", "http://dbpedia.org/resource/Volunteered_Geographic_Information", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/2000/01/rdf-schema#seeAlso", "http://dbpedia.org/resource/Geoweb", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/2000/01/rdf-schema#seeAlso", "http://linkedgeodata.org", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/2000/01/rdf-schema#seeAlso", "http://dbpedia.org/resource/Semantic_network", m )
 		
 		// define new properties
 		// TODO
@@ -369,7 +369,7 @@ class WikiRdf {
 		// RELATIONSHIPS
 
 		addRelationshipDefinition(m,OntoUtils.SOSM_KEY, "key", "This term has the given key",) 
-		addRelationshipDefinition(m,OntoUtils.SOSM_INTERNAL_LINK, "linkTo", "Term refers to target term.")
+		addRelationshipDefinition(m,OntoUtils.SOSM_INTERNAL_LINK, "generic link", "Term refers to target term.")
 		addRelationshipDefinition(m,OntoUtils.SOSM_REDIRECT, "redirect", "The term redirects to target term.")
 		addRelationshipDefinition(m,OntoUtils.SOSM_WIKIPEDIA_LINK, "Wikipedia link", "Term is linked to relevant Wikipedia article.")
 		addRelationshipDefinition(m,OntoUtils.SOSM_PHOTO, "image", "Term is exemplified with target image.")
@@ -417,6 +417,7 @@ class WikiRdf {
 				//log.debug(t)
 				assert t?.uri
 				addStatement( t?.uri, OntoUtils.SOSM_REDIRECT, t?.redirectionUri, m )
+				addStatement( t?.uri, OntoUtils.PRED_SAME_AS, t?.redirectionUri, m ) // potentially problematic
 			} else {
 				// handle LINKS
 				if ( t.uri ){
@@ -486,6 +487,12 @@ class WikiRdf {
 					
 					if ( t.wikiKeyUris ){
 						def keyUris = t.wikiKeyUris.split(' ')*.trim()
+						
+						if (keyUris.isEmpty()){
+							// fix for concepts that don't have a key
+							addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_BROADER, t.uri, m )
+						}
+						
 						keyUris.each{
 							assert it.trim()
 							assert Crawler.isOsmKeyPage( it.trim() ) || Crawler.isPropOsmKeyPage( it.trim() )
