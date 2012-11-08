@@ -385,20 +385,23 @@ class Crawler {
 	 * @return
 	 */
 	static String mergeDescriptions( String desc, String newDesc ){
+		desc = cleanDescription(desc)
+		newDesc = cleanDescription(newDesc)
+		
 		if (!newDesc) return desc
 		if (!desc) return newDesc
-		if (newDesc.toLowerCase() =~ desc.toLowerCase()){
+		if ( newDesc.contains(desc) ){
 			// no new data, return desc
 			return desc
 		}
-		if (desc.toLowerCase() =~ newDesc.toLowerCase()){
+		if ( desc.contains(newDesc) ){
 			return newDesc
 		}
 		
-		log.info("mergeDescriptions: '$desc' '$newDesc'")
 		// different text. chain.
 		String nd = "$desc. $newDesc."
 		nd = nd.replaceAll("\\.\\.",'.')
+		log.info("mergeDescriptions: '$desc' '$newDesc' \n      ==> $nd")
 		return nd
 	}
 	
@@ -713,6 +716,19 @@ class Crawler {
 		return term
 	}
 	
+	// util
+	static def clearString( String s ){
+		if (!s) return ''
+		return s.replaceAll("\n",' ').replaceAll(",",' ').toLowerCase().replaceAll(/\s+/,' ').trim()
+	}
+	
+	
+	// util
+	static def cleanDescription( String s ){
+		if (!s) return ''
+		return s.replaceAll("\n",' ').replaceAll(/\s+/,' ').trim()
+	}
+	
 	/**
 	 * Parse page such as:
 	 * 		http://wiki.openstreetmap.org/wiki/Tag:shop%3Ddeli
@@ -769,11 +785,7 @@ class Crawler {
 		def tree = parseHtmlPage( htmlCode )
 		assert tree
 		
-		// util
-		def clearString = {
-			if (!it) return ''
-			return it.replaceAll("\n",' ').replaceAll(",",' ').toLowerCase().replaceAll(/\s+/,' ').trim()
-		}
+		
 		
 		boolean inDescSection = false
 		boolean startingSection = true
@@ -789,7 +801,7 @@ class Crawler {
 			}
 		}
 		descStr = descStr.trim()
-		term.description += descStr
+		term.description = mergeDescriptions( term.description, descStr )
 		
 		def uris = getUrlsFromXmlNode( tree ).findAll{ return linkFilter( it ) }
 		String linksStr = ''

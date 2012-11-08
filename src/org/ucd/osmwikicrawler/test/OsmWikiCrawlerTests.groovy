@@ -122,6 +122,7 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 		
 		def uris = [ "http://wiki.openstreetmap.org/wiki/Proposed_features/hardware",
 			"http://wiki.openstreetmap.org/wiki/Key:amenity",
+			"http://wiki.openstreetmap.org/wiki/proposed_features/boat%3dprivate",
 			/*
 			"http://wiki.openstreetmap.org/wiki/Tag:sports%3Dathletics",
 			//"http://wiki.openstreetmap.org/wiki/Key:drink",
