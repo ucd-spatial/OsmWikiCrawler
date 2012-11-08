@@ -52,6 +52,7 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 	   "http://wiki.openstreetmap.org/wiki/Tag:shelter_type%3D",
 	   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dshelter",
 	   "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Drestaurant",
+	   "http://wiki.openstreetmap.org/wiki/Relations/Proposed/Waterway",
 	   "http://wiki.openstreetmap.org/wiki/Proposed_features/Shop_(rather_than_amenity%3Dshoptype_above)" ]
 	
 	void testRedirection(){
@@ -138,7 +139,7 @@ class OsmWikiCrawlerTests extends GroovyTestCase {
 			"http://wiki.openstreetmap.org/wiki/Key:landuse",
 			"http://wiki.openstreetmap.org/wiki/Tag:area%3Dyes",
 			"http://wiki.openstreetmap.org/wiki/Tag:shelter_type%3Dbasic_hut" ]
-		uris.addAll(problematicUris)
+		//uris.addAll(problematicUris)
 		
 		OsmOntology ontology = new OsmOntology()
 		

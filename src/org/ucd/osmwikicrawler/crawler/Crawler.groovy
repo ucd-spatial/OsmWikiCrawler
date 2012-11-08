@@ -335,7 +335,7 @@ class Crawler {
 		if (!t.descriptionUris) t.descriptionUris = ''
 		
 		descriptionFields.each{ field->
-			if (rowData[field]) t.description += ' ' + rowData[field] 
+			if (rowData[field]) t.description = mergeDescriptions( t.description, rowData[field] ) 
 			if (rowData[field+"Uri"]) t.descriptionUris += ' ' + rowData[field+"Uri"]
 		}
 		t.description = t.description.trim()
@@ -377,6 +377,29 @@ class Crawler {
 		return t
 	}
 	
+	/**
+	 * Very important function.
+	 * 
+	 * @param desc
+	 * @param newDesc
+	 * @return
+	 */
+	static String mergeDescriptions( String desc, String newDesc ){
+		if (!newDesc) return desc
+		if (!desc) return newDesc
+		if (newDesc.toLowerCase() =~ desc.toLowerCase()){
+			// no new data, return desc
+			return desc
+		}
+		if (desc.toLowerCase() =~ newDesc.toLowerCase()){
+			return newDesc
+		}
+		
+		// different text. chain.
+		String nd = "$desc. $newDesc."
+		nd = nd.replaceAll("\\.\\.",'.')
+		return nd
+	}
 	
 	static String fixLongOsmWikiUri( String uri ){
 		assert isOsmWikiUrl(uri)
@@ -669,7 +692,7 @@ class Crawler {
 			}
 		}
 		assert a && b
-		return "${a} ${b}"
+		return "${a}. ${b}"
 	}
 	
 	/**
@@ -1462,7 +1485,7 @@ class Crawler {
 			tree.'**'.each{
 				if (it.@id.text() == "bodyContent"){
 					it.'**'.each{
-						term.description += it.text() + " "
+						term.description = mergeDescriptions( term.description, it.text() )
 					}
 				}
 			}
@@ -1482,7 +1505,7 @@ class Crawler {
 		
 		//assert data["definition"] != null,"empty definition in $data for $term"
 		if (data["definition"] != null){
-			term.description = data["definition"]
+			term.description = mergeDescriptions( term.description, data["definition"] )
 		}
 		term = getImpliesAndCombinationLinks( term, tree )
 		

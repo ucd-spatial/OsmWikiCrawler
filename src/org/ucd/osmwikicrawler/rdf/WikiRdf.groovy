@@ -314,18 +314,42 @@ class WikiRdf {
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/source", "http://wiki.openstreetmap.org", m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/hasVersion", "1.0", m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/rights", "This material is Open Knowledge. http://opendefinition.org", m )
-		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://purl.org/dc/elements/1.1/date", new Date().toString(), m )
 		addStatement( OntoUtils.SKOS_SCHEMA_NAME, OntoUtils.SKOS_PREFLABEL, "OSM Semantic Network", m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_DEFINITION, "Dummy root term.", m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.SKOS_PREFLABEL, "root term", m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, OntoUtils.RDF_TYPE, OntoUtils.SKOS_CONCEPT, m )
 		addStatement( OntoUtils.SKOS_TOP_CONCEPT, "http://www.w3.org/2004/02/skos/core#topConceptOf", OntoUtils.SKOS_SCHEMA_NAME, m )
 		
+		// related things
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://wiki.openstreetmap.org/wiki/OSM_Semantic_Network", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://github.com/ucd-spatial/OsmWikiCrawler", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://github.com/ucd-spatial/OsmSemanticNetwork", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://dbpedia.org/resource/Openstreetmap", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://dbpedia.org/resource/Volunteered_Geographic_Information", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://dbpedia.org/resource/Geoweb", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://linkedgeodata.org", m )
+		addStatement( OntoUtils.SKOS_SCHEMA_NAME, "http://www.w3.org/1999/02/22-rdf-syntax-ns#seeAlso", "http://dbpedia.org/resource/Semantic_network", m )
+		
 		// define new properties
 		// TODO
 		m = createNewProperties(m)
+		m = addDateToSkosSchema(m)
 		return m
 	}
+
+	/**
+	*/
+	static private Model addDateToSkosSchema(Model m){
+		Resource resource = m.createResource(OntoUtils.SKOS_SCHEMA_NAME);
+		Property property = m.createProperty("http://purl.org/dc/elements/1.1/date");
+		Calendar cal = GregorianCalendar.getInstance();
+		Literal value = m.createTypedLiteral(cal);
+		//resource.addProperty(property, value);
+		assert value
+		m.add( m.createStatement(resource,property,value) )
+		return m
+	}
+
 	
 	static private Model createNewProperties( Model m ){
 		// LABELS
@@ -345,7 +369,7 @@ class WikiRdf {
 		// RELATIONSHIPS
 
 		addRelationshipDefinition(m,OntoUtils.SOSM_KEY, "key", "This term has the given key",) 
-		addRelationshipDefinition(m,OntoUtils.SOSM_INTERNAL_LINK, "link", "Term refers to target term.")
+		addRelationshipDefinition(m,OntoUtils.SOSM_INTERNAL_LINK, "linkTo", "Term refers to target term.")
 		addRelationshipDefinition(m,OntoUtils.SOSM_REDIRECT, "redirect", "The term redirects to target term.")
 		addRelationshipDefinition(m,OntoUtils.SOSM_WIKIPEDIA_LINK, "Wikipedia link", "Term is linked to relevant Wikipedia article.")
 		addRelationshipDefinition(m,OntoUtils.SOSM_PHOTO, "image", "Term is exemplified with target image.")
@@ -585,6 +609,13 @@ class WikiRdf {
 		}
 	}
 	
+	static String fixSkosDefinition(String d){
+		if (!d) return ""
+		d += "."
+		d = d.replaceAll("\\.\\.",'.').trim()
+		return d
+	}
+	
 	/**
 	 * 
 	 * @param subject
@@ -597,7 +628,7 @@ class WikiRdf {
 			assert existDef
 			log.debug("skos:definition for $subject found. Skipping.\n exist='$existDef'\n new='$definition'")
 		} else {
-			addStatement( subject, OntoUtils.SKOS_DEFINITION, definition, m, false, lang )
+			addStatement( subject, OntoUtils.SKOS_DEFINITION, fixSkosDefinition(definition), m, false, lang )
 		}
 	}
 	
