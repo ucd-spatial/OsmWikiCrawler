@@ -1641,7 +1641,7 @@ class Crawler {
 		assert term.key,"null key in $term"
 		assert !(term.value =~ '='),"equal is not allowed in value. term=$term"
 		assert !(term.key =~ '='),"equal is not allowed in key. term=$term"
-		assert !(term.key =~ '\\*'),"asterisk is not allowed in key. term=$term"
+		//assert !(term.key =~ '\\*'),"asterisk is not allowed in key. term=$term"
 		assert term.value,"null value in $term"
 		assert term.key.length() < KEY_MAX_LENGTH,"invalid term key length $term"
 		assert term.wikiKeyUris,"term.wikiKeyUri is null in $term"
