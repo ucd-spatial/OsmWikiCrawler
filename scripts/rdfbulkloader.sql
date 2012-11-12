@@ -1,3 +1,6 @@
+drop table load_list;
+drop table ldlock;
+
 create table load_list (
   ll_file varchar,
   ll_graph varchar,

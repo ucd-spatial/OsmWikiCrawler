@@ -6,7 +6,7 @@ LOAD rdfbulkloader.sql;
 
 SPARQL CLEAR GRAPH <http://www.w3.org/2006/03/wn/wn20/>;
 
-ld_dir('/usr/share/virtuoso/vad/', 'wordnet*.rdf', 'http://www.w3.org/2006/03/wn/wn20/');
+ld_dir('/usr/share/virtuoso/vad', 'wordnet*.rdf', 'http://www.w3.org/2006/03/wn/wn20/');
 
 rdf_loader_run();
 
